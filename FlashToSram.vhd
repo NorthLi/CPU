@@ -4,7 +4,7 @@ use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
 entity FlashToSram is
 port(
-	clk, rst: in std_logic;
+	clk, rst	  : in std_logic;
 	flash_byte : out std_logic;
 	flash_vpen : out std_logic;
 	flash_ce   : out std_logic;
@@ -14,6 +14,8 @@ port(
 	flash_addr : buffer std_logic_vector(22 downto 1);
 	flash_data : inout std_logic_vector(15 downto 0);
 	start_signal: in std_logic;
+	finish_signal : out std_logic;
+	low_address: out std_logic_vector(15 downto 0);
 	ram2_address: buffer std_logic_vector(17 downto 0);
 	ram2_data	: inout std_logic_vector(15 downto 0);
 	ram2_oe, ram2_we, ram2_ce : out std_logic
@@ -32,7 +34,7 @@ begin
 	flash_vpen <= '1';
 	flash_ce <= '0';
 	flash_rp <= '1';
-	process (state, rst)
+	process (state, rst, input_data)
 	begin
 		if (state = input_ram2_data)then
 			ram2_ce <= '0';
@@ -60,7 +62,8 @@ begin
 			state <= waiting;
 			flash_data <= (others => 'Z');
 			flash_addr <= (others => '0');
-			count <= 0;
+			count <= (others => '0');
+			finish_signal <= '0';
 		elsif (clk'event and clk = '1')then
 			case state is 
 				when waiting =>
@@ -83,11 +86,13 @@ begin
 					input_data <= flash_data;
 					flash_addr <= flash_addr + 1;
 					ram2_address <= flash_addr(18 downto 1);
+					low_address <= flash_data;
 				when input_ram2_data =>
 					state <= keep_ram2_data;
 				when keep_ram2_data =>
 					if (count = x"3FFF")then
 						state <= done;
+						finish_signal <= '1';
 					else 
 						state <= waiting;
 						count <= count + 1;
