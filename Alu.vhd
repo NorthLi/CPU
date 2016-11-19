@@ -3,6 +3,7 @@ use IEEE.std_logic_1164.ALL;
 use IEEE.std_logic_arith.ALL;
 use IEEE.std_logic_unsigned.ALL;
 use ieee.numeric_std.All;
+use const.ALL;
 
 entity ALU is
 	port(
@@ -14,27 +15,25 @@ entity ALU is
 end ALU;
 
 architecture Behavioral of ALU is
-	type reg_array is array (15 downto 0) of std_logic_vector (15 downto 0);
-	signal r: reg_array;
+	signal cmp, slt, slti : std_logic;
 begin
 
-	r(0) <= datax_EX + B;
-	r(1) <= datax_EX and B;
-	r(2) <= datax_EX;
-	r(3) <= not datax_EX;
-	r(4) <= datax_EX or B;
-	r(5) <= to_stdlogicvector(to_bitvector(datax_EX) sll conv_integer(unsigned(datay_EX)));
-	r(6) <= to_stdlogicvector(to_bitvector(datax_EX) sra conv_integer(unsigned(datay_EX)));
-	r(7) <= to_stdlogicvector(to_bitvector(datax_EX) srl conv_integer(unsigned(datay_EX)));
-	r(8) <= datax_EX - datay_EX;
-	r(9) <= datax_EX xor datay_EX;
-	r(10) <= '0' when datax_EX = datay_EX else '1';
-	r(11) <= '1' when datax_EX(15) > datay_EX(15) else
-				'1' when datax_EX(15) = datay_EX(15) and datax_EX < datay_EX else '0';
-	r(12) <= '1' when datax_ExX < data_y_EX else '0';
-	r(13) <= (others => '0');
-	r(14) <= (others => '0');
-	r(15) <= (others => '0');
-	dataz_ALU <= r(conv_integer(op));
-	
+	cmp <= '0' when datax_EX = datay_EX else '1';
+	slt <= '1' when datax_EX(15) > datay_EX(15) else '1' 
+				  when datax_EX(15) = datay_EX(15) and datax_EX < datay_EX else '0';
+	slti <= '1' when datax_EX < datay_EX else '0';
+				
+	dataz_ALU <= datax_EX + datay_EX   when op_EX = ALU_ADD else
+					 datax_EX and datay_EX when op_EX = ALU_AND else
+					 datax_EX              when op_EX = ALU_MOVE else
+					 not datax_EX          when op_EX = ALU_NOT else
+					 datax_EX or datay_EX  when op_EX = ALU_OR else
+					 to_stdlogicvector(to_bitvector(datax_EX) sll conv_integer(unsigned(datay_EX))) when op_EX = ALU_SLL else
+					 to_stdlogicvector(to_bitvector(datax_EX) sra conv_integer(unsigned(datay_EX))) when op_EX = ALU_SRA else
+					 to_stdlogicvector(to_bitvector(datax_EX) srl conv_integer(unsigned(datay_EX))) when op_EX = ALU_SRL else
+					 datax_EX - datay_EX   when op_EX = ALU_SUB else
+					 datax_EX xor datay_EX when op_EX = ALU_XOR else
+					 zero15 & cmp          when op_EX = ALU_CMP else
+					 zero15 & slt          when op_EX = ALU_SLT else
+					 zero15 & slti         when op_EX = ALU_SLTI else (others => '0');
 end Behavioral;
