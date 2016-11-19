@@ -46,7 +46,7 @@ architecture Behavioral of Thinpad is
 			
 			op_EX: out std_logic_vector(3 downto 0);
 			datax_EX, datay_EX, dataz_EX: out std_logic_vector(15 downto 0);
-			rx_EX, ry_EX, rz_EX: in std_logic_vector(3 downto 0);	
+			rx_EX, ry_EX, rz_EX: out std_logic_vector(3 downto 0);	
 			we_EX, oe_EX: out std_logic
 		);
 	end component;	
@@ -140,6 +140,7 @@ architecture Behavioral of Thinpad is
 			clk, rst: in std_logic;
 			pc_IF: in std_logic_vector(15 downto 0);
 			ins_IF: out std_logic_vector(15 downto 0);
+			stop: out std_logic;
 			
 			oe_MEM, we_MEM: in std_logic;
 			addr_MEM: in std_logic_vector(15 downto 0);
@@ -317,6 +318,7 @@ begin
 	
 		pc_IF => pc_IF,
 		ins_IF => ins_IF,
+		stop => stop,
 		
 		oe_MEM => oe_MEM,
 		we_MEM => we_MEM,

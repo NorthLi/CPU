@@ -19,8 +19,8 @@ architecture Behavioral of ALU is
 begin
 
 	cmp <= '0' when datax_EX = datay_EX else '1';
-	slt <= '1' when datax_EX(15) > datay_EX(15) else '1' 
-				  when datax_EX(15) = datay_EX(15) and datax_EX < datay_EX else '0';
+	slt <= '1' when datax_EX(15) > datay_EX(15) else 
+			 '1' when datax_EX(15) = datay_EX(15) and datax_EX < datay_EX else '0';
 	slti <= '1' when datax_EX < datay_EX else '0';
 				
 	dataz_ALU <= datax_EX + datay_EX   when op_EX = ALU_ADD else
@@ -33,7 +33,8 @@ begin
 					 to_stdlogicvector(to_bitvector(datax_EX) srl conv_integer(unsigned(datay_EX))) when op_EX = ALU_SRL else
 					 datax_EX - datay_EX   when op_EX = ALU_SUB else
 					 datax_EX xor datay_EX when op_EX = ALU_XOR else
-					 zero15 & cmp          when op_EX = ALU_CMP else
-					 zero15 & slt          when op_EX = ALU_SLT else
-					 zero15 & slti         when op_EX = ALU_SLTI else (others => '0');
+					 ZERO15 & cmp          when op_EX = ALU_CMP else
+					 ZERO15 & slt          when op_EX = ALU_SLT else
+					 ZERO15 & slti         when op_EX = ALU_SLTI else (others => '1');
+					 
 end Behavioral;

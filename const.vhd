@@ -49,7 +49,7 @@ package const is
 	constant ALU_SLT : std_logic_vector(3 downto 0) := "1011";
 	constant ALU_SLTI : std_logic_vector(3 downto 0) := "1100";
 	
-	constant zero15 : std_logic_vector(15 downto 1) := "000000000000000";
+	constant ZERO15 : std_logic_vector(15 downto 1) := "000000000000000";
 	
 end const;
 
