@@ -7,7 +7,7 @@ entity PC_Choose is
 	port(
 		clk, rst: in std_logic;
 		stop, bubble:in std_logic;
-		int: in std_logic;
+--		int: in std_logic;
 		
 		pc_branch: in std_logic_vector(15 downto 0);
 		pc_ctrl: in std_logic;
