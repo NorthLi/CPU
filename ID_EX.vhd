@@ -9,12 +9,12 @@ entity ID_EX is
 		
 		op_ID: in std_logic_vector(3 downto 0);
 		datax_ID, datay_ID, dataz_ID: in std_logic_vector(15 downto 0);
-		rx_ID, ry_ID, rz_ID: in std_logic_vector(3 downto 0);
+		rz_ID: in std_logic_vector(3 downto 0);
 		we_ID, oe_ID: in std_logic;
 		
 		op_EX: out std_logic_vector(3 downto 0);
 		datax_EX, datay_EX, dataz_EX: out std_logic_vector(15 downto 0);
-		rx_EX, ry_EX, rz_EX: out std_logic_vector(3 downto 0);	
+		rz_EX: out std_logic_vector(3 downto 0);	
 		we_EX, oe_EX: out std_logic
 	);
 end entity;	
@@ -30,21 +30,27 @@ begin
 				datax_EX <= (others => '1');
 				datay_EX <= (others => '1');
 				dataz_EX <= (others => '1');
-				rx_EX <= (others => '1');
-				ry_EX <= (others => '1');
 				rz_EX <= (others => '1');
 				we_EX <= '0';
 				oe_EX <= '0';
-			elsif (stop = '0' and bubble = '0') then
-				op_EX <= op_ID;
-				datax_EX <= datax_ID;
-				datay_EX <= datay_ID;
-				dataz_EX <= dataz_ID;
-				rx_EX <= rx_ID;
-				ry_EX <= ry_ID;
-				rz_EX <= rz_ID;
-				we_EX <= we_ID;
-				oe_EX <= oe_ID;
+			elsif (stop = '0') then
+				if(bubble = '1') then
+					op_EX <= (others => '1');
+					datax_EX <= (others => '1');
+					datay_EX <= (others => '1');
+					dataz_EX <= (others => '1');
+					rz_EX <= (others => '1');
+					we_EX <= '0';
+					oe_EX <= '0';
+				else
+					op_EX <= op_ID;
+					datax_EX <= datax_ID;
+					datay_EX <= datay_ID;
+					dataz_EX <= dataz_ID;
+					rz_EX <= rz_ID;
+					we_EX <= we_ID;
+					oe_EX <= oe_ID;
+				end if;
 			end if;
 		end if;
 	end process;
