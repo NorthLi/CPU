@@ -23,13 +23,35 @@ entity Memory_Manager is
 end Memory_Manager;
 
 architecture Behavioral of Memory_manager is
-	
+	type status_type is (read_pc, read_uart, write_uart, read_ram1, write_ram1, wait_ram1);
+	signal status : status_type;
 begin
+	
+	ram1_address <= "00" & pc_IF when status = read_pc
+				  else "00" & addr_MEM when (status = read_ram1) or (status = write_ram1);
+						 
+	
 	process(clk)
 	begin
 		if(clk'event and clk = '1')then
 			if(rst = '0')then
-				
+				status <= wait_ram1;
+			else
+				case status is
+					when wait_ram1 =>
+						status <= read_pc;
+					when read_pc =>
+					
+					when read_uart =>
+					
+					when write_uart =>
+					
+					when read_ram1 =>
+					
+					when write_ram1 =>
+					
+					when others =>
+				end case;
 			end if;
 		end if;
 	end process;

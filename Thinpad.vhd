@@ -297,6 +297,7 @@ begin
 		
 		op_ID => op_ID,
 		we_ID => we_ID,
+		oe_ID => oe_ID,
 		rx_ID => rx_ID,
 		datax_ID => datax_ID,
 		ry_ID => ry_ID,
@@ -351,13 +352,18 @@ begin
 	);
 	
 	-- MEM_Choose
-	din_EX <= dataz_EX when  (oe_EX or we_EX) = '1' else dataz_ALU;
-	addr_EX <= dataz_ALU when (oe_EX or we_EX) = '1' else dataz_EX;
+	din_EX <= dataz_EX when (oe_EX or we_EX) = '1'
+     	  else dataz_ALU;
+		  
+	addr_EX <= dataz_ALU when (oe_EX or we_EX) = '1'
+ 	      else dataz_EX;
 	
 	-- WB_Choose
-	dataz_MEM <= dout_MEM when (oe_MEM or we_MEM) = '1' else din_MEM;
+	dataz_MEM <= dout_MEM when (oe_MEM or we_MEM) = '1'
+			  else din_MEM;
 	
 	-- Bubble_Mananger
-	bubble <= '1' when (stop = '1' and ((rx_EX = rz_MEM) or (ry_EX = rz_MEM))) else '0';
+	bubble <= '1' when (oe_MEM = '1' and (rx_EX = rz_MEM or ry_EX = rz_MEM or rz_EX = rz_MEM))
+  	     else '0';
 	
 end Behavioral;
