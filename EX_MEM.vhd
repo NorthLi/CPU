@@ -33,19 +33,11 @@ begin
 				addr_MEM <= (others => '1');
 				din_MEM <= (others => '1');
 			elsif (stop = '0') then
-				if(bubble = '1') then
-					rz_MEM <= (others => '1');
-					we_MEM <= '0';
-					oe_MEM <= '0';
-					addr_MEM <= (others => '1');
-					din_MEM <= (others => '1');
-				else
-					rz_MEM <= rz_EX;
-					we_MEM <= we_EX;
-					oe_MEM <= oe_EX;
-					addr_MEM <= addr_EX;
-					din_MEM <= din_EX;
-				end if;
+				rz_MEM <= rz_EX;
+				we_MEM <= we_EX;
+				oe_MEM <= oe_EX;
+				addr_MEM <= addr_EX;
+				din_MEM <= din_EX;
 			end if;
 		end if;
 	end process;

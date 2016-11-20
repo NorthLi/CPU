@@ -45,12 +45,12 @@ architecture Behavioral of Thinpad is
 			
 			op_ID: in std_logic_vector(3 downto 0);
 			datax_ID, datay_ID, dataz_ID: in std_logic_vector(15 downto 0);
-			rx_ID, ry_ID, rz_ID: in std_logic_vector(3 downto 0);
+			rz_ID: in std_logic_vector(3 downto 0);
 			we_ID, oe_ID: in std_logic;
 			
 			op_EX: out std_logic_vector(3 downto 0);
 			datax_EX, datay_EX, dataz_EX: out std_logic_vector(15 downto 0);
-			rx_EX, ry_EX, rz_EX: out std_logic_vector(3 downto 0);	
+			rz_EX: out std_logic_vector(3 downto 0);	
 			we_EX, oe_EX: out std_logic
 		);
 	end component;	
@@ -58,7 +58,7 @@ architecture Behavioral of Thinpad is
 	component EX_MEM is
 		port(
 			clk, rst: in std_logic;
-			stop, bubble: in std_logic;
+			stop: in std_logic;
 			
 			rz_EX: in std_logic_vector(3 downto 0);
 			we_EX, oe_EX: in std_logic;
@@ -235,17 +235,14 @@ begin
 		datax_ID => datax_ID,
 		datay_ID => datay_ID,
 		dataz_ID => dataz_ID,
-		rx_ID => rx_ID,
-		ry_ID => ry_ID,
 		rz_ID => rz_ID,
 		we_ID => we_ID,
 		oe_ID => oe_ID,
+		
 		op_EX => op_EX,
 		datax_EX => datax_EX,
 		datay_EX => datay_EX,
 		dataz_EX => dataz_EX,
-		rx_EX => rx_EX,
-		ry_EX => ry_EX,
 		rz_EX => rz_EX,
 		we_EX => we_EX,
 		oe_EX => oe_EX
@@ -255,7 +252,6 @@ begin
 		clk => clk,
 		rst => rst,
 		stop => stop,
-		bubble => bubble,
 		rz_EX => rz_EX,
 		we_EX => we_EX,
 		oe_EX => oe_EX,
@@ -381,13 +377,7 @@ begin
 			  else din_MEM;
 	
 	-- Bubble_Mananger
-	bubble <= '1' when (oe_MEM = '1' and (rx_EX = rz_MEM or ry_EX = rz_MEM or rz_EX = rz_MEM))
+	bubble <= '1' when (oe_EX = '1' and (rx_ID = rz_EX or ry_ID = rz_EX or rz_ID = rz_EX))
   	     else '0';
-	
-	process (clk_0)
-	begin
-		if (clk_0'event and clk_0 = '1') then
-			clk <= not clk;
-		end if;
-	end process;
+		  
 end Behavioral;
