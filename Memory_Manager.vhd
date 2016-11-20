@@ -23,37 +23,47 @@ entity Memory_Manager is
 end Memory_Manager;
 
 architecture Behavioral of Memory_manager is
-	type status_type is (read_pc, read_uart, write_uart, read_ram1, write_ram1, wait_ram1);
-	signal status : status_type;
+	
 begin
-	
-	ram1_address <= "00" & pc_IF when status = read_pc
-				  else "00" & addr_MEM when (status = read_ram1) or (status = write_ram1);
-						 
-	
-	process(clk)
+	process(oe_MEM, we_MEM)
 	begin
-		if(clk'event and clk = '1')then
-			if(rst = '0')then
-				status <= wait_ram1;
-			else
-				case status is
-					when wait_ram1 =>
-						status <= read_pc;
-					when read_pc =>
-					
-					when read_uart =>
-					
-					when write_uart =>
-					
-					when read_ram1 =>
-					
-					when write_ram1 =>
-					
-					when others =>
-				end case;
-			end if;
+		ram1_oe <= '1';
+		ram1_we <= '1';
+		ram1_en <= '1';
+		
+		ram1_address <= (others => '0');
+		rdn <= '1';
+		wrn <= '1';
+	
+		if(we_MEM = '1') then 
+			ram1_en <= '0';
+			ram1_we <= '0';
+		elsif(oe_MEM = '1') then 
+			ram1_oe <= '0';
+			ram1_en <= '0';
+			dout_MEM <= x"0011";
 		end if;
+	end process;
+	
+	process(pc_IF)
+	begin
+		case pc_IF is
+			when x"0000" => 
+				ins_IF <= "0110100000000001";
+				stop <= '0';
+			when x"0001" => 
+				ins_IF <= "1001100000111111";
+				stop <= '0';
+			when x"0002" =>
+				ins_IF <= "1110000000101001";
+				stop <= '0';
+			when x"0003" =>
+				ins_IF <= "0000100000000000";
+				stop <= '0';
+			when others => 
+				ins_IF <= "0000100000000000";
+				stop <= '0';
+		end case;
 	end process;
 	
 end Behavioral;

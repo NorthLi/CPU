@@ -90,7 +90,7 @@ architecture Behavioral of Thinpad is
 			pc_branch: in std_logic_vector(15 downto 0);
 			pc_ctrl: in std_logic;
 			
-			pc_IF: out std_logic_vector(15 downto 0)
+			pc_IF: buffer std_logic_vector(15 downto 0)
 		);
 	end component;
 	
@@ -102,11 +102,11 @@ architecture Behavioral of Thinpad is
 			rz_EX, rz_MEM: in std_logic_vector(3 downto 0);
 			dataz_EX, dataz_MEM: in std_logic_vector(15 downto 0);
 			
-			rx_reg, ry_reg: out std_logic_vector(3 downto 0);
+			rx_reg, ry_reg: buffer std_logic_vector(3 downto 0);
 			datax_reg, datay_reg: in std_logic_vector(15 downto 0);
 			
 			pc_ctrl:out std_logic;
-			pc_branch: out std_logic_vector(15 downto 0);
+			pc_branch: buffer std_logic_vector(15 downto 0);
 			
 			op_ID: out std_logic_vector(3 downto 0);
 			we_ID, oe_ID: out std_logic;
@@ -157,7 +157,8 @@ architecture Behavioral of Thinpad is
 	end component;
 	
 	-- Control Signal
-	signal clk, stop, bubble, int: std_logic;
+	signal clk : std_logic := '0';
+	signal stop, bubble, int: std_logic;
 	
 	-- IF_ID
 	signal pc_IF: std_logic_vector(15 downto 0);
@@ -366,4 +367,10 @@ begin
 	bubble <= '1' when (oe_MEM = '1' and (rx_EX = rz_MEM or ry_EX = rz_MEM or rz_EX = rz_MEM))
   	     else '0';
 	
+	process (clk_0)
+	begin
+		if (clk_0'event and clk_0 = '1') then
+			clk <= not clk;
+		end if;
+	end process;
 end Behavioral;

@@ -2,8 +2,8 @@ library IEEE;
 use IEEE.std_logic_1164.ALL;
 use IEEE.std_logic_arith.ALL;
 use IEEE.std_logic_unsigned.ALL;
-use ieee.numeric_std.All;
-use const.ALL;
+--use ieee.numeric_std.All;
+use work.const.ALL;
 
 entity ALU is
 	port(
