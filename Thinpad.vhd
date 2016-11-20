@@ -104,7 +104,7 @@ architecture Behavioral of Thinpad is
 			pc_ID: in std_logic_vector(15 downto 0);
 			
 			rz_EX, rz_MEM: in std_logic_vector(3 downto 0);
-			dataz_EX, dataz_MEM: in std_logic_vector(15 downto 0);
+			din_EX, dataz_MEM: in std_logic_vector(15 downto 0);
 			
 			rx_reg, ry_reg: buffer std_logic_vector(3 downto 0);
 			datax_reg, datay_reg: in std_logic_vector(15 downto 0);
@@ -184,7 +184,7 @@ architecture Behavioral of Thinpad is
 	
 	signal op_EX: std_logic_vector(3 downto 0);
 	signal datax_EX, datay_EX, dataz_EX: std_logic_vector(15 downto 0);
-	signal rx_EX, ry_EX, rz_EX: std_logic_vector(3 downto 0);	
+	signal rz_EX: std_logic_vector(3 downto 0);	
 	signal we_EX, oe_EX: std_logic;
 	
 	-- EX_MEM
@@ -290,7 +290,7 @@ begin
 		ins_ID => ins_ID,
 		pc_ID => pc_ID,
 		rz_EX => rz_EX,
-		dataz_EX => dataz_EX,
+		din_EX => din_EX,
 		rz_MEM => rz_MEM,
 		dataz_MEM => dataz_MEM,
 		

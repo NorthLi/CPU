@@ -42,7 +42,7 @@ port(
 	datay_reg : in std_logic_vector(15 downto 0);
 	
 	rz_EX : in std_logic_vector(3 downto 0);
-	dataz_EX : in std_logic_vector(15 downto 0);
+	din_EX : in std_logic_vector(15 downto 0);
 	
 	rz_MEM : in std_logic_vector(3 downto 0);
 	dataz_MEM : in std_logic_vector(15 downto 0);
@@ -82,10 +82,10 @@ begin
 	rx <= '0' & ins_ID(10 downto 8);
 	ry <= '0' & ins_ID(7 downto 5);
 	rz <= '0' & ins_ID(4 downto 2);
-	process (datax_reg, rz_EX, dataz_EX, dataz_MEM, rz_MEM, rx_reg)
+	process (datax_reg, rz_EX, din_EX, dataz_MEM, rz_MEM, rx_reg)
 	begin
 		if(rx_reg = rz_EX) then
-			reg_data1 <= dataz_EX;
+			reg_data1 <= din_EX;
 		elsif(rx_reg = rz_MEM) then
 			reg_data1 <= dataz_MEM;
 		else
@@ -93,10 +93,10 @@ begin
 		end if;
 	end process;
 	
-	process (datay_reg, rz_EX, dataz_EX, dataz_MEM, rz_MEM, ry_reg)
+	process (datay_reg, rz_EX, din_EX, dataz_MEM, rz_MEM, ry_reg)
 	begin
 		if(ry_reg = rz_EX) then
-			reg_data2 <= dataz_EX;
+			reg_data2 <= din_EX;
 		elsif(ry_reg = rz_MEM) then
 			reg_data2 <= dataz_MEM;
 		else
@@ -150,9 +150,9 @@ begin
 					rx_reg <= REG_T;
 					if(reg_data1 = "0000000000000000") then 
 						pc_ctrl <= '1';
-						pc_branch(15 downto 8) <= (others => ins_ID(7));
-						pc_branch(7 downto 0) <= ins_ID(7 downto 0);
-						pc_branch <= pc_ID + pc_branch;
+						temp(15 downto 8) := (others => ins_ID(7));
+						temp(7 downto 0) := ins_ID(7 downto 0);
+						pc_branch <= pc_ID + 1 + temp;
 					end if;
 				elsif(rx(2 downto 0) = "011") then --ADDSP
 					rx_reg <= REG_SP;
@@ -168,9 +168,9 @@ begin
 					rx_reg <= REG_T;
 					if(not(reg_data1 = "0000000000000000")) then 
 						pc_ctrl <= '1';
-						pc_branch(15 downto 8) <= (others => ins_ID(7));
-						pc_branch(7 downto 0) <= ins_ID(7 downto 0);
-						pc_branch <= pc_ID + pc_branch;
+						temp(15 downto 8) := (others => ins_ID(7));
+						temp(7 downto 0) := ins_ID(7 downto 0);
+						pc_branch <= pc_ID + 1 + temp;
 					end if;
 				elsif(rx(2 downto 0) = "100") then --MTSP
 					rx_reg <= rx;
@@ -291,7 +291,7 @@ begin
 				pc_ctrl <= '1';
 				temp(15 downto 11) := (others => ins_ID(10));
 				temp(10 downto 0) := ins_ID(10 downto 0);
-				pc_branch <= pc_ID + 1 + pc_branch;
+				pc_branch <= pc_ID + 1 + temp;
 			when "00100" => --BEQZ
 				rx_reg <= rx;
 				if(reg_data1 = "0000000000000000") then 
@@ -307,7 +307,7 @@ begin
 					pc_ctrl <= '1';
 					temp(15 downto 8) := (others => ins_ID(7));
 					temp(7 downto 0) := ins_ID(7 downto 0);
-					pc_branch <= pc_ID + 1 + pc_branch;
+					pc_branch <= pc_ID + 1 + temp;
 				end if;
 			when "01101" => --LI
 				datax_ID <= (others => '0');

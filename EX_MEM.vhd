@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity EX_MEM is
 	port(
 		clk, rst: in std_logic;
-		stop, bubble: in std_logic;
+		stop: in std_logic;
 		
 		rz_EX: in std_logic_vector(3 downto 0);
 		we_EX, oe_EX: in std_logic;

@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use const.ALL;
+use work.const.ALL;
 
 entity Memory_Manager is
 	port(
@@ -53,19 +53,19 @@ begin
 	process(pc_IF)
 	begin
 		case pc_IF is
-			when x"0000" => 
-				ins_IF <= "0110100000000001";
+			when x"0000" =>
+				ins_IF <= "1001100000100000";
 				stop <= '0';
-			when x"0001" => 
-				ins_IF <= "1001100000111111";
+			when x"0001" =>
+				ins_IF <= "0100101100000001";
 				stop <= '0';
 			when x"0002" =>
-				ins_IF <= "1110000000101001";
+				ins_IF <= "1110001100101001";
 				stop <= '0';
 			when x"0003" =>
 				ins_IF <= "0000100000000000";
 				stop <= '0';
-			when others => 
+			when others =>
 				ins_IF <= "0000100000000000";
 				stop <= '0';
 		end case;
