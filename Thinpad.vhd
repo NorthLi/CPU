@@ -12,6 +12,10 @@ entity Thinpad is
 		ram1_address: out std_logic_vector(17 downto 0);
 		ram1_data: inout std_logic_vector(15 downto 0);
 		
+		ram2_oe, ram2_we, ram2_en : out std_logic;
+		ram2_address: out std_logic_vector(17 downto 0);
+		ram2_data: inout std_logic_vector(15 downto 0);
+		
 		rdn, wrn: out std_logic;
 		data_ready, tbre, tsre: in std_logic
 	);
@@ -23,7 +27,7 @@ architecture Behavioral of Thinpad is
 		port(
 			clk, rst: in std_logic;
 			stop, bubble: in std_logic;
-			int: in std_logic;
+--			int: in std_logic;
 			
 			pc_IF: in std_logic_vector(15 downto 0);
 			ins_IF: in std_logic_vector(15 downto 0);
@@ -37,7 +41,7 @@ architecture Behavioral of Thinpad is
 		port(
 			clk, rst: in std_logic;
 			stop, bubble: in std_logic;
-			int: in std_logic;
+--			int: in std_logic;
 			
 			op_ID: in std_logic_vector(3 downto 0);
 			datax_ID, datay_ID, dataz_ID: in std_logic_vector(15 downto 0);
@@ -85,7 +89,7 @@ architecture Behavioral of Thinpad is
 		port(
 			clk, rst: in std_logic;
 			stop, bubble:in std_logic;
-			int: in std_logic;
+--			int: in std_logic;
 		
 			pc_branch: in std_logic_vector(15 downto 0);
 			pc_ctrl: in std_logic;
@@ -137,7 +141,7 @@ architecture Behavioral of Thinpad is
 	
 	component Memory_Manager is
 		port(
-			clk, rst: in std_logic;
+			clk_0, clk, rst: in std_logic;
 			pc_IF: in std_logic_vector(15 downto 0);
 			ins_IF: out std_logic_vector(15 downto 0);
 			stop: out std_logic;
@@ -151,13 +155,18 @@ architecture Behavioral of Thinpad is
 			ram1_address: out std_logic_vector(17 downto 0);
 			ram1_data: inout std_logic_vector(15 downto 0);
 			
+			ram2_oe, ram2_we, ram2_en : out std_logic;
+			ram2_address: out std_logic_vector(17 downto 0);
+			ram2_data: inout std_logic_vector(15 downto 0);
+			
 			rdn, wrn: out std_logic;
 			data_ready, tbre, tsre: in std_logic
 		);
 	end component;
 	
 	-- Control Signal
-	signal clk, stop, bubble, int: std_logic;
+	signal clk, stop, bubble: std_logic;
+--	signal int: std_logic;
 	
 	-- IF_ID
 	signal pc_IF: std_logic_vector(15 downto 0);
@@ -201,13 +210,14 @@ architecture Behavioral of Thinpad is
 	signal dataz_ALU: std_logic_vector(15 downto 0);
 		
 begin
+	clk <= not clk when clk_0'event and clk_0 = '1';
 
 	u1: IF_ID port map(
 		clk => clk,
 		rst => rst,
 		stop => stop,
 		bubble => bubble,
-		int => int,
+--		int => int,
 		pc_IF => pc_IF,
 		ins_IF => ins_IF,
 		pc_ID => pc_ID,
@@ -219,7 +229,7 @@ begin
 		rst => rst,
 		stop => stop,
 		bubble => bubble,
-		int => int,
+--		int => int,
 		op_ID => op_ID,
 		datax_ID => datax_ID,
 		datay_ID => datay_ID,
@@ -273,7 +283,7 @@ begin
 		rst => rst,
 		stop => stop,
 		bubble => bubble,
-		int => int,
+--		int => int,
 		pc_branch => pc_branch,
 		pc_ctrl => pc_ctrl,
 		pc_IF => pc_IF
@@ -314,6 +324,7 @@ begin
 	);
 	
 	u8: Memory_Manager port map(
+		clk_0 => clk_0,
 		clk => clk,
 		rst => rst,
 	
@@ -332,6 +343,12 @@ begin
 		ram1_en => ram1_en,
 		ram1_address => ram1_address,
 		ram1_data => ram1_data,
+		
+		ram2_oe => ram2_oe,
+		ram2_we => ram2_we,
+		ram2_en => ram2_en,
+		ram2_address => ram2_address,
+		ram2_data => ram2_data,
 		
 		rdn => rdn,
 		wrn => wrn,

@@ -49,6 +49,22 @@ package const is
 	constant ALU_SLT : std_logic_vector(3 downto 0) := "1011";
 	constant ALU_SLTI : std_logic_vector(3 downto 0) := "1100";
 	
+	constant read_pc : std_logic_vector(2 downto 0) := "000";
+	constant read_ram : std_logic_vector(2 downto 0) := "001";
+	constant write_ram : std_logic_vector(2 downto 0) := "010";
+	constant read_uart : std_logic_vector(2 downto 0) := "011";
+	constant write_uart : std_logic_vector(2 downto 0) := "100";
+	constant test_uart : std_logic_vector(2 downto 0) := "101";		
+	constant wrong_type : std_logic_vector(2 downto 0) := "111";
+	
+	constant uart_ready : std_logic_vector(2 downto 0) := "000";
+	constant read_next : std_logic_vector(2 downto 0) := "001";
+	constant write_next : std_logic_vector(2 downto 0) := "010";
+	constant write_wait : std_logic_vector(2 downto 0) := "011";			
+	constant write_tbre : std_logic_vector(2 downto 0) := "100";
+	constant write_tsre : std_logic_vector(2 downto 0) := "101";
+	
+	constant ZERO14 : std_logic_vector(15 downto 2) := "00000000000000";
 	constant ZERO15 : std_logic_vector(15 downto 1) := "000000000000000";
 	
 end const;

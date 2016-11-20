@@ -42,5 +42,5 @@ begin
 			  else ZERO15 & slt          when op_EX = ALU_SLT
 			  else ZERO15 & slti         when op_EX = ALU_SLTI
 			  else (others => '1');
-					 
+	
 end Behavioral;

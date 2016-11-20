@@ -6,7 +6,7 @@ entity IF_ID is
 	port(
 		clk, rst: in std_logic;
 		stop, bubble: in std_logic;
-		int: in std_logic;
+--		int: in std_logic;
 		
 		pc_IF: in std_logic_vector(15 downto 0);
 		ins_IF: in std_logic_vector(15 downto 0);

@@ -5,7 +5,7 @@ entity ID_EX is
 	port(
 		clk, rst: in std_logic;
 		stop, bubble: in std_logic;
-		int: in std_logic;
+--		int: in std_logic;
 		
 		op_ID: in std_logic_vector(3 downto 0);
 		datax_ID, datay_ID, dataz_ID: in std_logic_vector(15 downto 0);
