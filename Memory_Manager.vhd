@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use const.ALL;
+use work.const.ALL;
 
 entity Memory_Manager is
 	port(
@@ -121,7 +121,7 @@ begin
 				read_pc <= '1';
 			else
 				ins_IF <= dout_ram;
-				if(ramtype = RAM_PORT)then
+				if((status = read_ram or status = write_ram))then
 					read_pc <= '0';
 				end if;
 			end if;

@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use const.ALL;
+use work.const.ALL;
 
 entity uart is
 	port(
