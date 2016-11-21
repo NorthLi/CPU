@@ -282,7 +282,7 @@ begin
 				elsif(ins_ID(7 downto 5) = "010") then --MFPC
 					rx_reg <= REG_PC;
 					rx_ID <= REG_PC;
-					datax_ID <= reg_data1;
+					datax_ID <= pc_ID + 1;
 					op_ID <= "0010";
 					
 					rz_ID <= rx;

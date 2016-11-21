@@ -54,19 +54,19 @@ begin
 	begin
 		case pc_IF is
 			when x"0000" =>
-				ins_IF <= "1001100000100000";
+				ins_IF <= "0110100100000100";--lw 001 <- 1
 				stop <= '0';
 			when x"0001" =>
-				ins_IF <= "0100101100000001";
+				ins_IF <= "0110101000000010";
 				stop <= '0';
 			when x"0002" =>
-				ins_IF <= "1110001100101001";
+				ins_IF <= "0000100000000000";
 				stop <= '0';
 			when x"0003" =>
-				ins_IF <= "0000100000000000";
+				ins_IF <= "0011011100101011";
 				stop <= '0';
 			when others =>
-				ins_IF <= "0000100000000000";
+				ins_IF <= "1110000101001101";
 				stop <= '0';
 		end case;
 	end process;
