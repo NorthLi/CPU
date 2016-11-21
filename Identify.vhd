@@ -1,37 +1,9 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    11:34:28 11/20/2016 
--- Design Name: 
--- Module Name:    Identify - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
 use IEEE.STD_LOGIC_ARITH.ALL; 
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.const.all;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity Identify is
 port(
@@ -72,7 +44,6 @@ signal op_ins : std_logic_vector(4 downto 0);
 signal rx : std_logic_vector(3 downto 0);
 signal ry : std_logic_vector(3 downto 0);
 signal rz : std_logic_vector(3 downto 0);
-signal imm : std_logic_vector(15 downto 0);
 
 signal reg_data1 : std_logic_vector(15 downto 0);
 signal reg_data2 : std_logic_vector(15 downto 0);

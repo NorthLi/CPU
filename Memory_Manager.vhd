@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use work.const.ALL;
+use const.ALL;
 
 entity Memory_Manager is
 	port(
@@ -28,46 +28,120 @@ entity Memory_Manager is
 end Memory_Manager;
 
 architecture Behavioral of Memory_manager is
+	component sram is
+		port(
+			clk_0, rst: in std_logic;
+			read_pc: in std_logic;
+			pc_ram: in std_logic_vector(15 downto 0);
+			
+			status: in std_logic_vector(3 downto 0);
+			addr_ram: in std_logic_vector(15 downto 0);
+			din_ram: in std_logic_vector(15 downto 0);
+			dout_ram: out std_logic_vector(15 downto 0);
+			
+			ram2_oe, ram2_we: out std_logic;
+			ram2_address: out std_logic_vector(17 downto 0);
+			ram2_data: inout std_logic_vector(15 downto 0)
+		);
+	end component;
+	
+	component uart is
+		port(
+			clk_0, rst: in std_logic;
+			
+			status: in std_logic_vector(3 downto 0);
+			din_uart: in std_logic_vector(15 downto 0);
+			dout_uart: out std_logic_vector(15 downto 0);
+			sta_uart: out std_logic_vector(1 downto 0);
+			
+			ram1_data: inout std_logic_vector(15 downto 0);
+			rdn, wrn: out std_logic;
+			data_ready, tbre, tsre: in std_logic
+		);
+	end component;
+	
+	signal read_pc: std_logic;
+	signal ramtype :std_logic_vector(1 downto 0);
+	signal status : std_logic_vector(3 downto 0);
+	signal dout_ram, dout_uart : std_logic_vector(15 downto 0);
+	signal sta_uart : std_logic_vector(1 downto 0);
 	
 begin
-	process(oe_MEM, we_MEM)
-	begin
-		ram1_oe <= '1';
-		ram1_we <= '1';
-		ram1_en <= '1';
-		
-		ram1_address <= (others => '0');
-		rdn <= '1';
-		wrn <= '1';
+	ram1_en <= '1';
+	ram1_oe <= '1';
+	ram1_we <= '1';
+	ram1_address <= (others => '1');
+	ram2_en <= '0';
 	
-		if(we_MEM = '1') then 
-			ram1_en <= '0';
-			ram1_we <= '0';
-		elsif(oe_MEM = '1') then 
-			ram1_oe <= '0';
-			ram1_en <= '0';
-			dout_MEM <= x"0011";
+	u1: sram port map(
+		clk_0 => clk_0,
+		rst => rst,
+		pc_ram => pc_IF,
+		read_pc => read_pc,
+		
+		status => status,
+		addr_ram => addr_MEM,
+		din_ram => din_MEM,
+		dout_ram => dout_ram,
+		
+		ram2_oe => ram2_oe,
+		ram2_we => ram2_we,
+		ram2_address => ram2_address,
+		ram2_data => ram2_data
+	);
+	
+	u2 : uart port map(
+		clk_0 => clk_0,
+		rst => rst,
+		
+		status => status,
+		din_uart => din_MEM,
+		dout_uart => dout_uart,
+		sta_uart => sta_uart,
+		
+		ram1_data => ram1_data,
+		rdn => rdn,
+		wrn => wrn,
+		data_ready => data_ready,
+		tbre => tbre,
+		tsre => tsre
+	);
+	
+	ramtype <= UART_PORT when addr_MEM = x"BF00"
+			else UART_TEST when addr_MEM = x"BF01"
+			else RAM_PORT;
+	status <= ramtype & oe_MEM & we_MEM;
+	
+	process(clk)
+	begin
+		if(clk'event and clk = '1')then
+			if(rst = '0')then
+				read_pc <= '1';
+			elsif(read_pc = '0')then
+				read_pc <= '1';
+			else
+				ins_IF <= dout_ram;
+				if(ramtype = RAM_PORT)then
+					read_pc <= '0';
+				end if;
+			end if;
 		end if;
 	end process;
 	
-	process(pc_IF)
+	process(clk)
 	begin
-		case pc_IF is
-			when x"0000" =>
-				ins_IF <= "0110100100000100";--lw 001 <- 1
+		if(clk'event and clk = '0') then
+			if(read_pc = '1' and (status = read_ram or status = write_ram)) then
+				stop <= '1';
+			else 
 				stop <= '0';
-			when x"0001" =>
-				ins_IF <= "0110101000000010";
-				stop <= '0';
-			when x"0002" =>
-				ins_IF <= "0000100000000000";
-				stop <= '0';
-			when x"0003" =>
-				ins_IF <= "0011011100101011";
-				stop <= '0';
-			when others =>
-				ins_IF <= "1110000101001101";
-				stop <= '0';
-		end case;
+			end if;
+		end if;
 	end process;
+	
+	dout_MEM <= dout_ram when status = read_ram
+			 else dout_uart when status = read_uart
+			 else ZERO14 & sta_uart when status = test_uart
+			 else (others => '1');
+			
 end Behavioral;

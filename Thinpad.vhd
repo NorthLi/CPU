@@ -8,6 +8,8 @@ entity Thinpad is
 		clk_0: in std_logic;
 		rst : in std_logic;
 		
+		LI: out std_logic_vector(15 downto 0);
+		
 		ram1_oe, ram1_we, ram1_en : out std_logic;
 		ram1_address: out std_logic_vector(17 downto 0);
 		ram1_data: inout std_logic_vector(15 downto 0);
@@ -15,7 +17,7 @@ entity Thinpad is
 		ram2_oe, ram2_we, ram2_en : out std_logic;
 		ram2_address: out std_logic_vector(17 downto 0);
 		ram2_data: inout std_logic_vector(15 downto 0);
-		
+
 		rdn, wrn: out std_logic;
 		data_ready, tbre, tsre: in std_logic
 	);
@@ -125,6 +127,8 @@ architecture Behavioral of Thinpad is
 					
 			rx_reg, ry_reg: in std_logic_vector(3 downto 0);
 			datax_reg, datay_reg: out std_logic_vector(15 downto 0);
+			
+			test_reg : out std_logic_vector(15 downto 0);
 		
 			rz_WB: in std_logic_vector(3 downto 0);
 			dataz_WB: in std_logic_vector(15 downto 0)
@@ -209,9 +213,11 @@ architecture Behavioral of Thinpad is
 	signal datax_reg, datay_reg: std_logic_vector(15 downto 0);
 	signal dout_MEM: std_logic_vector(15 downto 0);
 	signal dataz_ALU: std_logic_vector(15 downto 0);
-		
+	
+	signal ram1_address_temp: std_logic_vector(17 downto 0);
 begin
 	clk <= not clk when clk_0'event and clk_0 = '1';
+	ram1_address <= dataX_EX(8 downto 0) & dataY_EX(8 downto 0);
 
 	u1: IF_ID port map(
 		clk => clk,
@@ -338,7 +344,7 @@ begin
 		ram1_oe => ram1_oe,
 		ram1_we => ram1_we,
 		ram1_en => ram1_en,
-		ram1_address => ram1_address,
+		ram1_address => ram1_address_temp,
 		ram1_data => ram1_data,
 		
 		ram2_oe => ram2_oe,
@@ -361,6 +367,8 @@ begin
 		ry_reg => ry_reg,
 		datax_reg => datax_reg,
 		datay_reg => datay_reg,
+		test_reg => LI,
+		
 		rz_WB => rz_WB,
 		dataz_WB => dataz_WB
 	);

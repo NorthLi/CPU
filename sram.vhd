@@ -5,8 +5,10 @@ use const.ALL;
 entity sram is
 	port(
 		clk_0, rst: in std_logic;
-		status: in std_logic_vector(2 downto 0);
+		read_pc: in std_logic;
 		pc_ram: in std_logic_vector(15 downto 0);
+		
+		status: in std_logic_vector(3 downto 0);
 		addr_ram: in std_logic_vector(15 downto 0);
 		din_ram: in std_logic_vector(15 downto 0);
 		dout_ram: out std_logic_vector(15 downto 0);
@@ -19,12 +21,20 @@ end sram;
 
 architecture Behavioral of sram is
 	signal fist_period : std_logic;
-	signal ram_data : std_logic_vector(15 downto 0);
+	signal ram_data, output_ins : std_logic_vector(15 downto 0);
 	
---	signal test_rom: std_logic;
---	signal rom_data : std_logic_vector(15 downto 0);
+	component rom is
+		port(
+			input_addr : in std_logic_vector(15 downto 0);
+			output_ins : out std_logic_vector(15 downto 0)
+		);
+	end component;
 	
 begin
+	u1: rom port map(
+		input_addr => pc_ram,
+		output_ins => output_ins
+	);
 	ram2_address(17 downto 16) <= "00";
 	
 	process(clk_0)
@@ -35,26 +45,28 @@ begin
 				ram_data <= (others => '1');
 			elsif(fist_period = '0')then
 				fist_period <= '1';
-				case status is
-					when read_pc =>
-						ram2_we <= '1';
-						ram2_oe <= '0';
-						ram2_address(15 downto 0) <= pc_ram;
-						ram2_data <= (others => 'Z');
-					when read_ram =>
-						ram2_we <= '1';
-						ram2_oe <= '0';
-						ram2_address(15 downto 0) <= addr_ram;
-						ram2_data <= (others => 'Z');
-					when write_ram =>
-						ram2_oe <= '1';
-						ram2_we <= '0';
-						ram2_address(15 downto 0) <= addr_ram;
-						ram2_data <= din_ram;
-					when others =>
-						ram2_oe <= '1';
-						ram2_we <= '1';
-				end case;
+				if(read_pc = '1')then
+					ram2_we <= '1';
+					ram2_oe <= '0';
+					ram2_address(15 downto 0) <=pc_ram;
+					ram2_data <= (others => 'Z');
+				else
+					case status is
+						when read_ram =>
+							ram2_we <= '1';
+							ram2_oe <= '0';
+							ram2_address(15 downto 0) <= addr_ram;
+							ram2_data <= (others => 'Z');
+						when write_ram =>
+							ram2_oe <= '1';
+							ram2_we <= '0';
+							ram2_address(15 downto 0) <= addr_ram;
+							ram2_data <= din_ram;
+						when others =>
+							ram2_oe <= '1';
+							ram2_we <= '1';
+					end case;
+				end if;
 			else
 				fist_period <= '0';
 				ram2_oe <= '1';
@@ -64,6 +76,7 @@ begin
 		end if;
 	end process;
 	
-	dout_ram <= ram_data;
+	dout_ram <= output_ins when pc_ram < x"4000"
+			 else ram_data;
 	
 end Behavioral;

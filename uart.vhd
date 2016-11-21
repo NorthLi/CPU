@@ -5,10 +5,11 @@ use const.ALL;
 entity uart is
 	port(
 		clk_0, rst: in std_logic;
-		status: in std_logic_vector(2 downto 0);
+		status: in std_logic_vector(3 downto 0);
+		
 		din_uart: in std_logic_vector(15 downto 0);
 		dout_uart: out std_logic_vector(15 downto 0);
-		uart_finish: out std_logic_vector(1 downto 0);
+		sta_uart: out std_logic_vector(1 downto 0);
 
 		ram1_data: inout std_logic_vector(15 downto 0);
 		rdn, wrn: out std_logic;
@@ -19,7 +20,7 @@ end uart;
 architecture Behavioral of uart is
 	signal ust: std_logic_vector(2 downto 0);
 begin
-	uart_finish <= data_ready & "1" when ust = uart_ready else "00";
+	sta_uart <= data_ready & "1" when ust = uart_ready else "00";
 	
 	process(clk_0)
 	begin

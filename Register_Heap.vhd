@@ -5,15 +5,15 @@ use ieee.std_logic_arith.all;
 
 entity Register_Heap is
 	port ( 
-		clk : in  STD_LOGIC;
-      rst : in  STD_LOGIC;
-      rx_reg : in  STD_LOGIC_VECTOR(3 downto 0);
-      ry_reg : in  STD_LOGIC_VECTOR(3 downto 0);
-      datax_reg : out  STD_LOGIC_VECTOR(15 downto 0);
-      datay_reg : out  STD_LOGIC_VECTOR(15 downto 0);
+		clk, rst: in std_logic;
+				
+		rx_reg, ry_reg: in std_logic_vector(3 downto 0);
+		datax_reg, datay_reg: out std_logic_vector(15 downto 0);
 		
-      rz_WB : in  STD_LOGIC_VECTOR(3 downto 0);
-      dataz_WB : in  STD_LOGIC_VECTOR(15 downto 0)
+		test_reg : out std_logic_vector(15 downto 0);
+	
+		rz_WB: in std_logic_vector(3 downto 0);
+		dataz_WB: in std_logic_vector(15 downto 0)
 	);
 end Register_Heap;
 
@@ -24,6 +24,7 @@ begin
 
 	datax_reg <= regs(conv_integer(rx_reg));
 	datay_reg <= regs(conv_integer(ry_reg));
+	test_reg <= regs(0);
 
 	process(clk)
 	begin
