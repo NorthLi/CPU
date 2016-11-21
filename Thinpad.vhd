@@ -127,8 +127,6 @@ architecture Behavioral of Thinpad is
 					
 			rx_reg, ry_reg: in std_logic_vector(3 downto 0);
 			datax_reg, datay_reg: out std_logic_vector(15 downto 0);
-			
-			test_reg : out std_logic_vector(15 downto 0);
 		
 			rz_WB: in std_logic_vector(3 downto 0);
 			dataz_WB: in std_logic_vector(15 downto 0)
@@ -217,7 +215,8 @@ architecture Behavioral of Thinpad is
 	signal ram1_address_temp: std_logic_vector(17 downto 0);
 begin
 	clk <= not clk when clk_0'event and clk_0 = '1';
-	ram1_address <= dataX_EX(8 downto 0) & dataY_EX(8 downto 0);
+	LI <= pc_ID;
+	ram1_address <= "00" & ins_ID;
 
 	u1: IF_ID port map(
 		clk => clk,
@@ -367,7 +366,6 @@ begin
 		ry_reg => ry_reg,
 		datax_reg => datax_reg,
 		datay_reg => datay_reg,
-		test_reg => LI,
 		
 		rz_WB => rz_WB,
 		dataz_WB => dataz_WB

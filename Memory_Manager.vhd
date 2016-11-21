@@ -33,6 +33,7 @@ architecture Behavioral of Memory_manager is
 			clk_0, rst: in std_logic;
 			read_pc: in std_logic;
 			pc_ram: in std_logic_vector(15 downto 0);
+			ins_ram: out std_logic_vector(15 downto 0);
 			
 			status: in std_logic_vector(3 downto 0);
 			addr_ram: in std_logic_vector(15 downto 0);
@@ -60,7 +61,7 @@ architecture Behavioral of Memory_manager is
 		);
 	end component;
 	
-	signal read_pc: std_logic;
+	signal read_pc, rst_ram: std_logic;
 	signal ramtype :std_logic_vector(1 downto 0);
 	signal status : std_logic_vector(3 downto 0);
 	signal dout_ram, dout_uart : std_logic_vector(15 downto 0);
@@ -75,9 +76,10 @@ begin
 	
 	u1: sram port map(
 		clk_0 => clk_0,
-		rst => rst,
+		rst => rst_ram,
 		pc_ram => pc_IF,
 		read_pc => read_pc,
+		ins_ram => ins_IF,
 		
 		status => status,
 		addr_ram => addr_MEM,
@@ -112,15 +114,20 @@ begin
 			else RAM_PORT;
 	status <= ramtype & oe_MEM & we_MEM;
 	
+	dout_MEM <= dout_ram when status = read_ram
+			 else dout_uart when status = read_uart
+			 else ZERO14 & sta_uart when status = test_uart
+			 else (others => '1');
+			 
 	process(clk)
 	begin
 		if(clk'event and clk = '1')then
+			rst_ram <= rst;
 			if(rst = '0')then
 				read_pc <= '1';
 			elsif(read_pc = '0')then
 				read_pc <= '1';
 			else
-				ins_IF <= dout_ram;
 				if((status = read_ram or status = write_ram))then
 					read_pc <= '0';
 				end if;
@@ -138,10 +145,5 @@ begin
 			end if;
 		end if;
 	end process;
-	
-	dout_MEM <= dout_ram when status = read_ram
-			 else dout_uart when status = read_uart
-			 else ZERO14 & sta_uart when status = test_uart
-			 else (others => '1');
 			
 end Behavioral;

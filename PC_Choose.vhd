@@ -26,7 +26,7 @@ begin
 	begin
 		if(clk'event and clk = '1')then
 			if (rst = '0') then
-				pc_IF <= (others => '0');
+				pc_IF <= (others => '1');
 			elsif(stop = '0' and bubble = '0')then
 				pc_IF <= pc_ready;
 			end if;

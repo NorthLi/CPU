@@ -43,11 +43,11 @@ ARCHITECTURE behavior OF test0 IS
     PORT(
          clk_0 : IN  std_logic;
          rst : IN  std_logic;
-         ram1_oe : OUT  std_logic;
-         ram1_we : OUT  std_logic;
-         ram1_en : OUT  std_logic;
-         ram1_address : OUT  std_logic_vector(17 downto 0);
-         ram1_data : INOUT  std_logic_vector(15 downto 0);
+         ram2_oe : OUT  std_logic;
+         ram2_we : OUT  std_logic;
+         ram2_en : OUT  std_logic;
+         ram2_address : OUT  std_logic_vector(17 downto 0);
+         ram2_data : INOUT  std_logic_vector(15 downto 0);
          rdn : OUT  std_logic;
          wrn : OUT  std_logic;
          data_ready : IN  std_logic;
@@ -65,13 +65,13 @@ ARCHITECTURE behavior OF test0 IS
    signal tsre : std_logic := '0';
 
 	--BiDirs
-   signal ram1_data : std_logic_vector(15 downto 0);
+   signal ram2_data : std_logic_vector(15 downto 0);
 
  	--Outputs
-   signal ram1_oe : std_logic;
-   signal ram1_we : std_logic;
-   signal ram1_en : std_logic;
-   signal ram1_address : std_logic_vector(17 downto 0);
+   signal ram2_oe : std_logic;
+   signal ram2_we : std_logic;
+   signal ram2_en : std_logic;
+   signal ram2_address : std_logic_vector(17 downto 0);
    signal rdn : std_logic;
    signal wrn : std_logic;
 
@@ -84,11 +84,11 @@ BEGIN
    uut: Thinpad PORT MAP (
           clk_0 => clk_0,
           rst => rst,
-          ram1_oe => ram1_oe,
-          ram1_we => ram1_we,
-          ram1_en => ram1_en,
-          ram1_address => ram1_address,
-          ram1_data => ram1_data,
+          ram2_oe => ram2_oe,
+          ram2_we => ram2_we,
+          ram2_en => ram2_en,
+          ram2_address => ram2_address,
+          ram2_data => ram2_data,
           rdn => rdn,
           wrn => wrn,
           data_ready => data_ready,

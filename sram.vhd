@@ -7,6 +7,7 @@ entity sram is
 		clk_0, rst: in std_logic;
 		read_pc: in std_logic;
 		pc_ram: in std_logic_vector(15 downto 0);
+		ins_ram: out std_logic_vector(15 downto 0);
 		
 		status: in std_logic_vector(3 downto 0);
 		addr_ram: in std_logic_vector(15 downto 0);
@@ -21,7 +22,7 @@ end sram;
 
 architecture Behavioral of sram is
 	signal fist_period : std_logic;
-	signal ram_data, output_ins : std_logic_vector(15 downto 0);
+	signal output_ins : std_logic_vector(15 downto 0);
 	
 	component rom is
 		port(
@@ -42,7 +43,8 @@ begin
 		if(clk_0'event and clk_0 = '0')then
 			if(rst = '0') then
 				fist_period <= '0';
-				ram_data <= (others => '1');
+				ins_ram <= x"0800";
+				dout_ram <= x"0800";
 			elsif(fist_period = '0')then
 				fist_period <= '1';
 				if(read_pc = '1')then
@@ -71,12 +73,18 @@ begin
 				fist_period <= '0';
 				ram2_oe <= '1';
 				ram2_we <= '1';
-				ram_data <= ram2_data;
+				if(read_pc = '1')then
+					ins_ram <= ram2_data;
+--					if(pc_ram < x"4000")then
+--						ins_ram <= output_ins;
+--					else
+--						ins_ram <= ram2_data;
+--					end if;
+				else
+					dout_ram <= ram2_data;
+				end if;
 			end if;
 		end if;
 	end process;
-	
-	dout_ram <= output_ins when pc_ram < x"4000"
-			 else ram_data;
 	
 end Behavioral;

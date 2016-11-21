@@ -6,11 +6,9 @@ use ieee.std_logic_arith.all;
 entity Register_Heap is
 	port ( 
 		clk, rst: in std_logic;
-				
+
 		rx_reg, ry_reg: in std_logic_vector(3 downto 0);
 		datax_reg, datay_reg: out std_logic_vector(15 downto 0);
-		
-		test_reg : out std_logic_vector(15 downto 0);
 	
 		rz_WB: in std_logic_vector(3 downto 0);
 		dataz_WB: in std_logic_vector(15 downto 0)
@@ -24,7 +22,6 @@ begin
 
 	datax_reg <= regs(conv_integer(rx_reg));
 	datay_reg <= regs(conv_integer(ry_reg));
-	test_reg <= regs(0);
 
 	process(clk)
 	begin

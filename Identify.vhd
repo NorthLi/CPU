@@ -153,14 +153,16 @@ begin
 				elsif(rx(2 downto 0) = "010") then --SW_RS
 					rx_reg <= REG_SP;
 					rx_ID <= REG_SP;
+					ry_reg <= REG_RA;
 					
 					datax_ID <= reg_data1;
 					datay_ID(15 downto 8) <= (others => ins_ID(7));
 					datay_ID(7 downto 0) <= ins_ID(7 downto 0);
+					op_ID <= "0000";
 					
 					we_ID <= '1';
 					
-					rz_ID <= REG_RA;
+					dataz_ID <= reg_data2;
 				end if;
 			when "11100" => 
 				if(ins_ID(1 downto 0) = "01") then --ADDU
@@ -360,25 +362,31 @@ begin
 			when "11011" => --SW
 				rx_reg <= rx;
 				rx_ID <= rx;
+				ry_reg <= ry;
 				
 				datax_ID <= reg_data1;
 				datay_ID(15 downto 5) <= (others => ins_ID(4));
 				datay_ID(4 downto 0) <= ins_ID(4 downto 0);
 				
-				we_ID <= '1';
+				op_ID <= "0000";
 				
-				rz_ID <= ry;
+				dataz_ID <= reg_data2;
+				
+				we_ID <= '1';
 			when "11010" => --SW_SP
 				rx_reg <= REG_SP;
 				rx_ID <= REG_SP;
+				ry_reg <= rx;
 				
 				datax_ID <= reg_data1;
 				datay_ID(15 downto 8) <= (others => ins_ID(7));
 				datay_ID(7 downto 0) <= ins_ID(7 downto 0);
 				
-				we_ID <= '1';
+				op_ID <= "0000";
 				
-				rz_ID <= rx;
+				dataz_ID <= reg_data2;
+				
+				we_ID <= '1';
 			when others =>
 		end case;
 				
