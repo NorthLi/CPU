@@ -15,18 +15,23 @@ begin
 	begin
 		case input_addr is 
 		
-			when x"0000" => output_ins <= x"6901";  --LI R1 01
-			when x"0001" => output_ins <= x"6a01";  --LI R2 01
-			when x"0002" => output_ins <= x"6b85";  --LI R3 85
-			when x"0003" => output_ins <= x"3360";  --SLL R3 R3 00
-			when x"0004" => output_ins <= x"6c09";  --LI R4 09
-			when x"0005" => output_ins <= x"db20";  --SW R3 R1 00
-			when x"0006" => output_ins <= x"db41";  --SW R3 R2 01
-			when x"0007" => output_ins <= x"e145";  --ADDU R1 R2 R1
-			when x"0008" => output_ins <= x"e149";  --ADDU R1 R2 R2
-			when x"0009" => output_ins <= x"4b02";  --ADDIU R3 02
-			when x"000a" => output_ins <= x"4cff";  --ADDIU R4 FF
-			when x"000b" => output_ins <= x"2cf9";  --BNEZ R4 F9
+			when x"0000" => output_ins <= x"6aff";
+			when x"0001" => output_ins <= x"6bc0";
+			when x"0002" => output_ins <= x"3360";
+			when x"0003" => output_ins <= x"6dff";
+			when x"0004" => output_ins <= x"35a0";
+			when x"0005" => output_ins <= x"4d83";
+			when x"0006" => output_ins <= x"6961";
+			when x"0007" => output_ins <= x"db22";
+			when x"0008" => output_ins <= x"9b82"; 
+			when x"0009" => output_ins <= x"db81";
+			when x"000a" => output_ins <= x"9b21";
+			when x"000b" => output_ins <= x"2cfb";
+			when x"000c" => output_ins <= x"4901";
+			when x"000d" => output_ins <= x"2df8";
+			when x"000e" => output_ins <= x"4d01";
+			when x"000f" => output_ins <= x"ef00";
+			when x"0010" => output_ins <= x"0800";
 			
 			when others => output_ins <= x"0800";
 		end case;

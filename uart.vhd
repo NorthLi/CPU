@@ -9,8 +9,9 @@ entity uart is
 		
 		din_uart: in std_logic_vector(15 downto 0);
 		dout_uart: out std_logic_vector(15 downto 0);
-		sta_uart: out std_logic_vector(1 downto 0);
+		sta_uart: buffer std_logic_vector(1 downto 0);
 
+		ram1_address: out std_logic_vector(17 downto 0);
 		ram1_data: inout std_logic_vector(15 downto 0);
 		rdn, wrn: out std_logic;
 		data_ready, tbre, tsre: in std_logic
@@ -21,7 +22,7 @@ architecture Behavioral of uart is
 	signal ust: std_logic_vector(2 downto 0);
 begin
 	sta_uart <= data_ready & "1" when ust = uart_ready else "00";
-	
+	ram1_address <= "0000000" & status & sta_uart & ust & tbre & tsre;
 	process(clk_0)
 	begin
 		if(clk_0'event and clk_0 = '0')then
@@ -59,6 +60,7 @@ begin
 							 ust <= uart_ready;
 						end if;
 					when others =>
+						ust <= uart_ready;
 						rdn <= '1';
 						wrn <= '1';
 				end case;

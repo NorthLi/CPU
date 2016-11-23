@@ -23,6 +23,8 @@ end sram;
 architecture Behavioral of sram is
 	signal fist_period : std_logic;
 	signal output_ins : std_logic_vector(15 downto 0);
+
+	signal r1, r2 : std_logic_vector(15 downto 0);
 	
 	component rom is
 		port(
@@ -45,6 +47,9 @@ begin
 				fist_period <= '0';
 				ins_ram <= x"0800";
 				dout_ram <= x"0800";
+				
+				r1<=x"0000";
+				r2<=x"0000";
 			elsif(fist_period = '0')then
 				fist_period <= '1';
 				if(read_pc = '1')then
@@ -75,6 +80,7 @@ begin
 				ram2_we <= '1';
 				if(read_pc = '1')then
 					ins_ram <= ram2_data;
+
 --					if(pc_ram < x"4000")then
 --						ins_ram <= output_ins;
 --					else
@@ -82,6 +88,16 @@ begin
 --					end if;
 				else
 					dout_ram <= ram2_data;
+
+--					if(status = read_ram and addr_ram = x"c001")then
+--						dout_ram <= r1;
+--					elsif(status = read_ram and addr_ram = x"c002")then
+--						dout_ram <= r2;
+--					elsif(status = write_ram and addr_ram = x"c001")then
+--						r1 <= din_ram;
+--					elsif(status = write_ram and addr_ram = x"c002")then
+--						r2 <= din_ram;
+--					end if;
 				end if;
 			end if;
 		end if;

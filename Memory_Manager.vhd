@@ -53,8 +53,9 @@ architecture Behavioral of Memory_manager is
 			status: in std_logic_vector(3 downto 0);
 			din_uart: in std_logic_vector(15 downto 0);
 			dout_uart: out std_logic_vector(15 downto 0);
-			sta_uart: out std_logic_vector(1 downto 0);
+			sta_uart: buffer std_logic_vector(1 downto 0);
 			
+			ram1_address: out std_logic_vector(17 downto 0);
 			ram1_data: inout std_logic_vector(15 downto 0);
 			rdn, wrn: out std_logic;
 			data_ready, tbre, tsre: in std_logic
@@ -71,7 +72,6 @@ begin
 	ram1_en <= '1';
 	ram1_oe <= '1';
 	ram1_we <= '1';
-	ram1_address <= (others => '1');
 	ram2_en <= '0';
 	
 	u1: sram port map(
@@ -94,13 +94,14 @@ begin
 	
 	u2 : uart port map(
 		clk_0 => clk_0,
-		rst => rst,
+		rst => rst_ram,
 		
 		status => status,
 		din_uart => din_MEM,
 		dout_uart => dout_uart,
 		sta_uart => sta_uart,
 		
+		ram1_address => ram1_address,
 		ram1_data => ram1_data,
 		rdn => rdn,
 		wrn => wrn,
@@ -117,7 +118,7 @@ begin
 	dout_MEM <= dout_ram when status = read_ram
 			 else dout_uart when status = read_uart
 			 else ZERO14 & sta_uart when status = test_uart
-			 else (others => '1');
+			 else din_MEM;
 			 
 	process(clk)
 	begin

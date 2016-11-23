@@ -212,11 +212,9 @@ architecture Behavioral of Thinpad is
 	signal dout_MEM: std_logic_vector(15 downto 0);
 	signal dataz_ALU: std_logic_vector(15 downto 0);
 	
-	signal ram1_address_temp: std_logic_vector(17 downto 0);
 begin
 	clk <= not clk when clk_0'event and clk_0 = '1';
 	LI <= pc_ID;
-	ram1_address <= "00" & ins_ID;
 
 	u1: IF_ID port map(
 		clk => clk,
@@ -343,7 +341,7 @@ begin
 		ram1_oe => ram1_oe,
 		ram1_we => ram1_we,
 		ram1_en => ram1_en,
-		ram1_address => ram1_address_temp,
+		ram1_address => ram1_address,
 		ram1_data => ram1_data,
 		
 		ram2_oe => ram2_oe,
