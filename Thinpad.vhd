@@ -19,7 +19,16 @@ entity Thinpad is
 		ram2_data: inout std_logic_vector(15 downto 0);
 
 		rdn, wrn: out std_logic;
-		data_ready, tbre, tsre: in std_logic
+		data_ready, tbre, tsre: in std_logic;
+		
+		flash_byte : out std_logic;
+		flash_vpen : out std_logic;
+		flash_ce   : out std_logic;
+		flash_oe   : out std_logic;
+		flash_we   : out std_logic;
+		flash_rp   : out std_logic;
+		flash_addr : buffer std_logic_vector(22 downto 1);
+		flash_data : inout std_logic_vector(15 downto 0)
 	);
 end Thinpad;
 
@@ -162,8 +171,17 @@ architecture Behavioral of Thinpad is
 			ram2_data: inout std_logic_vector(15 downto 0);
 			
 			rdn, wrn: out std_logic;
-			data_ready, tbre, tsre: in std_logic
-		);
+			data_ready, tbre, tsre: in std_logic;
+			
+			flash_byte : out std_logic;
+			flash_vpen : out std_logic;
+			flash_ce   : out std_logic;
+			flash_oe   : out std_logic;
+			flash_we   : out std_logic;
+			flash_rp   : out std_logic;
+			flash_addr : buffer std_logic_vector(22 downto 1);
+			flash_data : inout std_logic_vector(15 downto 0)
+			);
 	end component;
 	
 	-- Control Signal
@@ -356,7 +374,16 @@ begin
 		wrn => wrn,
 		data_ready => data_ready,
 		tbre => tbre,
-		tsre => tsre
+		tsre => tsre,
+		
+		flash_byte => flash_byte,
+		flash_vpen => flash_vpen,
+		flash_ce => flash_ce,
+		flash_oe => flash_oe,
+		flash_we => flash_we,
+		flash_rp => flash_rp,
+		flash_addr => flash_addr,
+		flash_data => flash_data
 	);
 	
 	u9: Register_Heap port map(

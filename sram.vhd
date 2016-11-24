@@ -74,12 +74,13 @@ begin
 				ram2_oe <= '1';
 				ram2_we <= '1';
 				if(read_pc = '1')then
-					ins_ram <= ram2_data;
---					if(pc_ram < x"4000")then
---						ins_ram <= output_ins;
---					else
+--					ins_ram <= ram2_data;
+					if(pc_ram < x"000e")then
+						ins_ram <= output_ins;
+					else
 --						ins_ram <= ram2_data;
---					end if;
+						ins_ram <= x"0800";
+					end if;
 				else
 					dout_ram <= ram2_data;
 				end if;

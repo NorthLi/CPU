@@ -32,7 +32,8 @@ package const is
 	constant write_ram : std_logic_vector(3 downto 0) := "0001";
 	constant read_uart : std_logic_vector(3 downto 0) := "0110";
 	constant write_uart : std_logic_vector(3 downto 0) := "0101";
-	constant test_uart : std_logic_vector(3 downto 0) := "1010";		
+	constant test_uart : std_logic_vector(3 downto 0) := "1010";
+	constant read_flash : std_logic_vector(3 downto 0) := "1110";
 	
 	constant uart_ready : std_logic_vector(2 downto 0) := "000";
 	constant read_next : std_logic_vector(2 downto 0) := "001";
@@ -42,8 +43,7 @@ package const is
 	constant write_tsre : std_logic_vector(2 downto 0) := "101";
 	
 	constant ZERO14 : std_logic_vector(15 downto 2) := "00000000000000";
-	constant ZERO15 : std_logic_vector(15 downto 1) := "000000000000000";
-	
+	constant ZERO15 : std_logic_vector(15 downto 1) := "000000000000000";	
 end const;
 
 package body const is
