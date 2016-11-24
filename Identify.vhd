@@ -162,6 +162,7 @@ begin
 					
 					we_ID <= '1';
 					
+					rz_ID <= REG_RA;
 					dataz_ID <= reg_data2;
 				end if;
 			when "11100" => 
@@ -370,6 +371,7 @@ begin
 				
 				op_ID <= "0000";
 				
+				rz_ID <= ry;
 				dataz_ID <= reg_data2;
 				
 				we_ID <= '1';
@@ -384,6 +386,7 @@ begin
 				
 				op_ID <= "0000";
 				
+				rz_ID <= rx;
 				dataz_ID <= reg_data2;
 				
 				we_ID <= '1';
@@ -394,4 +397,3 @@ begin
 
 
 end Behavioral;
-
