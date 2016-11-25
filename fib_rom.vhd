@@ -19,15 +19,17 @@ begin
 			when x"0003" => output_ins <= x"6a02";-- LI R2 2
 			when x"0004" => output_ins <= x"3240";-- SLL R2 R2 0 (0200)
 			when x"0005" => output_ins <= x"4a20";-- ADDIU R2 0X20 -> R2->0220
-			when x"0006" => output_ins <= x"6b0f";-- LI R3 0F(SRAM_START_ADDR)
+			when x"0006" => output_ins <= x"6b11";-- LI R3 11(SRAM_START_ADDR)
 			when x"0007" => output_ins <= x"d882";-- SW R0 R4 2
-			when x"0008" => output_ins <= x"9822";-- LW R0 R1 2(circle)
-			when x"0009" => output_ins <= x"db20";-- SW R3 R1 0
-			when x"000A" => output_ins <= x"4aff";-- (ADDIU R2 FF)R2count to 536 size of term : 0x"0220"(544)
-			when x"000B" => output_ins <= x"4b01";-- ADDIU R3 1
-			when x"000C" => output_ins <= x"4c01";-- ADDIU R4 1
-			when x"000D" => output_ins <= x"2af9";-- BNEZ R2 FB(-7)
-			when x"000E" => output_ins <= x"0800";-- NOP
+			when x"0008" => output_ins <= x"0800";-- NOP
+			when x"0009" => output_ins <= x"9822";-- LW R0 R1 2(circle)
+			when x"000A" => output_ins <= x"0800";-- NOP
+			when x"000B" => output_ins <= x"db20";-- SW R3 R1 0
+			when x"000C" => output_ins <= x"4aff";-- (ADDIU R2 FF)R2count to 536 size of term : 0x"0220"(544)
+			when x"000D" => output_ins <= x"4b01";-- ADDIU R3 1
+			when x"000E" => output_ins <= x"4c01";-- ADDIU R4 1
+			when x"000F" => output_ins <= x"2af7";-- BNEZ R2 F7(-9)
+			when x"0010" => output_ins <= x"0800";-- NOP
 			when others => output_ins <= x"0800";
 		end case;
 	end process;
