@@ -33,8 +33,10 @@ entity Memory_Manager is
 		flash_oe   : out std_logic;
 		flash_we   : out std_logic;
 		flash_rp   : out std_logic;
-		flash_addr : buffer std_logic_vector(22 downto 1);
-		flash_data : inout std_logic_vector(15 downto 0)
+		flash_addr : out std_logic_vector(22 downto 0);
+		flash_data : inout std_logic_vector(15 downto 0);
+		
+		addr_out   : out std_logic_vector(15 downto 0)
 	);
 end Memory_Manager;
 
@@ -76,6 +78,7 @@ architecture Behavioral of Memory_manager is
 	component flash is 
 		port(
 			clk_0, rst: in std_logic;
+			input_addr : in std_logic_vector(15 downto 0);
 			status : in std_logic_vector(3 downto 0);
 			flash_byte : out std_logic;
 			flash_vpen : out std_logic;
@@ -83,7 +86,7 @@ architecture Behavioral of Memory_manager is
 			flash_oe   : out std_logic;
 			flash_we   : out std_logic;
 			flash_rp   : out std_logic;
-			flash_addr : buffer std_logic_vector(22 downto 1);
+			flash_addr : out std_logic_vector(22 downto 0);
 			flash_data : inout std_logic_vector(15 downto 0);
 			dout_flash : out std_logic_vector(15 downto 0)
 		);
@@ -141,6 +144,7 @@ begin
 	u3 : flash port map(
 		clk_0 => clk_0,
 		rst => rst,
+		input_addr => din_MEM,
 		status => status,
 		flash_byte => flash_byte,
 		flash_vpen => flash_vpen,
@@ -153,18 +157,50 @@ begin
 		dout_flash => dout_flash
 	);
 	
-	ramtype <= UART_PORT when addr_MEM = x"BF00"
-			else UART_TEST when addr_MEM = x"BF01"
-			else FLASH_PORT when addr_MEM = x"BF02"
-			else RAM_PORT;
+	process(addr_MEM)
+	begin
+		case addr_MEM is
+			when x"BF00" =>
+				ramtype <= UART_PORT;
+			when x"BF01" =>
+				ramtype <= UART_TEST;
+			when x"BF02" =>
+				ramtype <= FLASH_PORT;
+			when others =>
+				ramtype <= RAM_PORT;
+		end case;
+	end process;
+	
+--	ramtype <= UART_PORT when addr_MEM = x"BF00"
+--			else UART_TEST when addr_MEM = x"BF01"
+--			else FLASH_PORT when addr_MEM = x"BF02"
+--			else RAM_PORT;
 	status <= ramtype & oe_MEM & we_MEM;
 	
-	dout_MEM <= dout_ram when status = read_ram
-			 else dout_uart when status = read_uart
-			 else ZERO14 & sta_uart when status = test_uart
-			 else x"0101" when status = read_flash
-			 else din_MEM;
+	process(status, dout_ram, dout_ram, dout_uart, sta_uart, dout_flash, din_MEM)
+	begin
+		case status is
+			when read_ram => 
+				dout_MEM <= dout_ram;
+			when read_uart =>
+				dout_MEM <= dout_uart;
+			when test_uart =>
+				dout_MEM <= ZERO14 & sta_uart;
+			when read_flash =>
+				dout_MEM <= dout_flash;
+--				dout_MEM <= x"0001";
+			when others => 
+				dout_MEM <= din_MEM;
+		end case;
+	end process;
+	
+--	dout_MEM <= dout_ram when status = read_ram
+--			 else dout_uart when status = read_uart
+--			 else ZERO14 & sta_uart when status = test_uart
+--			 else dout_flash when status = read_flash
+--			 else din_MEM;
 			 
+	addr_out <= din_MEM;
 	process(clk)
 	begin
 		if(clk'event and clk = '1')then

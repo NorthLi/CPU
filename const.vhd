@@ -34,6 +34,7 @@ package const is
 	constant write_uart : std_logic_vector(3 downto 0) := "0101";
 	constant test_uart : std_logic_vector(3 downto 0) := "1010";
 	constant read_flash : std_logic_vector(3 downto 0) := "1110";
+	constant write_flash : std_logic_vector(3 downto 0) := "1101";
 	
 	constant uart_ready : std_logic_vector(2 downto 0) := "000";
 	constant read_next : std_logic_vector(2 downto 0) := "001";

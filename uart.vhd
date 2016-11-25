@@ -40,13 +40,13 @@ begin
 						elsif(status = write_uart)then
 							ram1_data <= din_uart;
 							ust <= write_next;
+							wrn <= '0';
 						end if;
 					when read_next =>
 						dout_uart <= ram1_data;
 						rdn <= '1';
 						ust <= uart_ready;
 					when write_next =>
-						wrn <= '0';
 						ust <= write_wait;
 					when write_wait =>
 						wrn <= '1';

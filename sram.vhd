@@ -80,11 +80,11 @@ begin
 				ram2_we <= '1';
 				if(read_pc = '1')then
 --					ins_ram <= ram2_data;
-					if(pc_ram < x"000e")then
+					if(pc_ram < x"000f")then
 						ins_ram <= output_ins;
+--						ins_ram <= x"0800";
 					else
---						ins_ram <= ram2_data;
-						ins_ram <= x"0800";
+						ins_ram <= ram2_data;
 					end if;
 				else
 					dout_ram <= ram2_data;

@@ -27,7 +27,7 @@ entity Thinpad is
 		flash_oe   : out std_logic;
 		flash_we   : out std_logic;
 		flash_rp   : out std_logic;
-		flash_addr : buffer std_logic_vector(22 downto 1);
+		flash_addr : out std_logic_vector(22 downto 0);
 		flash_data : inout std_logic_vector(15 downto 0)
 	);
 end Thinpad;
@@ -179,8 +179,9 @@ architecture Behavioral of Thinpad is
 			flash_oe   : out std_logic;
 			flash_we   : out std_logic;
 			flash_rp   : out std_logic;
-			flash_addr : buffer std_logic_vector(22 downto 1);
-			flash_data : inout std_logic_vector(15 downto 0)
+			flash_addr : out std_logic_vector(22 downto 0);
+			flash_data : inout std_logic_vector(15 downto 0);
+			addr_out   : out std_logic_vector(15 downto 0)
 			);
 	end component;
 	
@@ -230,9 +231,11 @@ architecture Behavioral of Thinpad is
 	signal dout_MEM: std_logic_vector(15 downto 0);
 	signal dataz_ALU: std_logic_vector(15 downto 0);
 	
+	signal addr_out : std_logic_vector(15 downto 0);
+	
 begin
 	clk <= not clk when clk_0'event and clk_0 = '1';
-	LI <= pc_ID;
+	LI <= pc_IF;
 
 	u1: IF_ID port map(
 		clk => clk,
@@ -381,7 +384,8 @@ begin
 		flash_we => flash_we,
 		flash_rp => flash_rp,
 		flash_addr => flash_addr,
-		flash_data => flash_data
+		flash_data => flash_data,
+		addr_out => addr_out
 	);
 	
 	u9: Register_Heap port map(

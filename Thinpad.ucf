@@ -1,5 +1,4 @@
 
-# PlanAhead Generated physical constraints 
 
 NET "LI[15]" LOC = A14;
 NET "LI[14]" LOC = E13;
@@ -85,7 +84,7 @@ NET "ram2_data[3]" LOC = T14;
 NET "ram2_data[2]" LOC = T15;
 NET "ram2_data[1]" LOC = T16;
 NET "ram2_data[0]" LOC = U13;
-NET "clk_0" LOC = B9;
+NET "clk_0" LOC = B8;
 NET "data_ready" LOC = A16;
 NET "ram1_en" LOC = M15;
 NET "ram1_oe" LOC = M16;
@@ -98,3 +97,53 @@ NET "rst" LOC = U10;
 NET "tbre" LOC = D14;
 NET "tsre" LOC = N9;
 NET "wrn" LOC = U5;
+
+
+NET "flash_addr[22]" LOC = K4;
+NET "flash_addr[21]" LOC = K5;
+NET "flash_addr[20]" LOC = K6;
+NET "flash_addr[19]" LOC = L1;
+NET "flash_addr[18]" LOC = L2;
+NET "flash_addr[17]" LOC = L3;
+NET "flash_addr[16]" LOC = L4;
+NET "flash_addr[15]" LOC = L5;
+NET "flash_addr[14]" LOC = L6;
+NET "flash_addr[13]" LOC = M3;
+NET "flash_addr[12]" LOC = M4;
+NET "flash_addr[11]" LOC = M5;
+NET "flash_addr[10]" LOC = M6;
+NET "flash_addr[9]" LOC = N4;
+NET "flash_addr[8]" LOC = N5;
+NET "flash_addr[7]" LOC = P1;
+NET "flash_addr[6]" LOC = P2;
+NET "flash_addr[5]" LOC = P3;
+NET "flash_addr[4]" LOC = P4;
+NET "flash_addr[3]" LOC = R2;
+NET "flash_addr[2]" LOC = R3;
+NET "flash_addr[1]" LOC = T1;
+NET "flash_data[15]" LOC = F1;
+NET "flash_data[14]" LOC = F2;
+NET "flash_data[13]" LOC = G3;
+NET "flash_data[12]" LOC = G4;
+NET "flash_data[11]" LOC = G5;
+NET "flash_data[10]" LOC = G6;
+NET "flash_data[9]" LOC = H1;
+NET "flash_data[8]" LOC = H2;
+NET "flash_data[7]" LOC = H3;
+NET "flash_data[6]" LOC = H4;
+NET "flash_data[5]" LOC = H5;
+NET "flash_data[4]" LOC = H6;
+NET "flash_data[3]" LOC = J1;
+NET "flash_data[2]" LOC = J2;
+NET "flash_data[1]" LOC = J4;
+NET "flash_data[0]" LOC = J5;
+NET "flash_byte" LOC = C1;
+NET "flash_ce" LOC = E4;
+NET "flash_oe" LOC = E1;
+NET "flash_rp" LOC = D1;
+NET "flash_vpen" LOC = C2;
+NET "flash_we" LOC = D4;
+
+# PlanAhead Generated physical constraints 
+
+NET "flash_addr[0]" LOC = T2;
