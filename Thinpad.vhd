@@ -180,8 +180,7 @@ architecture Behavioral of Thinpad is
 			flash_we   : out std_logic;
 			flash_rp   : out std_logic;
 			flash_addr : out std_logic_vector(22 downto 0);
-			flash_data : inout std_logic_vector(15 downto 0);
-			addr_out   : out std_logic_vector(15 downto 0)
+			flash_data : inout std_logic_vector(15 downto 0)
 			);
 	end component;
 	
@@ -230,8 +229,6 @@ architecture Behavioral of Thinpad is
 	signal datax_reg, datay_reg: std_logic_vector(15 downto 0);
 	signal dout_MEM: std_logic_vector(15 downto 0);
 	signal dataz_ALU: std_logic_vector(15 downto 0);
-	
-	signal addr_out : std_logic_vector(15 downto 0);
 	
 begin
 	clk <= not clk when clk_0'event and clk_0 = '1';
@@ -384,8 +381,7 @@ begin
 		flash_we => flash_we,
 		flash_rp => flash_rp,
 		flash_addr => flash_addr,
-		flash_data => flash_data,
-		addr_out => addr_out
+		flash_data => flash_data
 	);
 	
 	u9: Register_Heap port map(

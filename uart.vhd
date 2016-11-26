@@ -5,7 +5,7 @@ use work.const.ALL;
 entity uart is
 	port(
 		clk_0, rst: in std_logic;
-		status: in std_logic_vector(3 downto 0);
+		ctrl_uart: in std_logic_vector(1 downto 0);
 		
 		din_uart: in std_logic_vector(15 downto 0);
 		dout_uart: out std_logic_vector(15 downto 0);
@@ -22,26 +22,29 @@ architecture Behavioral of uart is
 	signal ust: std_logic_vector(2 downto 0);
 begin
 	sta_uart <= data_ready & "1" when ust = uart_ready else "00";
-	ram1_address <= "0000000" & status & sta_uart & ust & tbre & tsre;
+	ram1_address <=  x"00" & ctrl_uart & sta_uart & ust & data_ready & tbre & tsre;
+
 	process(clk_0)
 	begin
 		if(clk_0'event and clk_0 = '0')then
 			if(rst = '0')then
-				ust <= uart_ready;
 				rdn <= '1';
 				wrn <= '1';
+				ust <= uart_ready;
 			else
 				case ust is
 					when uart_ready =>
-						if(status = read_uart)then
-							rdn <= '0';
-							ram1_data <= (others => 'Z');
-							ust <= read_next;
-						elsif(status = write_uart)then
-							ram1_data <= din_uart;
-							ust <= write_next;
-							wrn <= '0';
-						end if;
+						case ctrl_uart is
+							when read_data =>
+								rdn <= '0';
+								ram1_data <= (others => 'Z');
+								ust <= read_next;
+							when write_data =>
+								wrn <= '0';
+								ram1_data <= din_uart;
+								ust <= write_next;
+							when others =>
+						end case;
 					when read_next =>
 						dout_uart <= ram1_data;
 						rdn <= '1';
@@ -60,9 +63,9 @@ begin
 							 ust <= uart_ready;
 						end if;
 					when others =>
-						ust <= uart_ready;
 						rdn <= '1';
 						wrn <= '1';
+						ust <= uart_ready;
 				end case;
 			end if;
 		end if;

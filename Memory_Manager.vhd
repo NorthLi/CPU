@@ -34,9 +34,7 @@ entity Memory_Manager is
 		flash_we   : out std_logic;
 		flash_rp   : out std_logic;
 		flash_addr : out std_logic_vector(22 downto 0);
-		flash_data : inout std_logic_vector(15 downto 0);
-		
-		addr_out   : out std_logic_vector(15 downto 0)
+		flash_data : inout std_logic_vector(15 downto 0)
 	);
 end Memory_Manager;
 
@@ -62,8 +60,8 @@ architecture Behavioral of Memory_manager is
 	component uart is
 		port(
 			clk_0, rst: in std_logic;
-			
-			status: in std_logic_vector(3 downto 0);
+			ctrl_uart: in std_logic_vector(1 downto 0);
+		
 			din_uart: in std_logic_vector(15 downto 0);
 			dout_uart: out std_logic_vector(15 downto 0);
 			sta_uart: buffer std_logic_vector(1 downto 0);
@@ -93,11 +91,12 @@ architecture Behavioral of Memory_manager is
 	end component;
 			
 	
-	signal read_pc, rst_ram: std_logic;
+	signal read_pc, rst_ram, en_MEM: std_logic;
 	signal ramtype :std_logic_vector(1 downto 0);
 	signal status : std_logic_vector(3 downto 0);
 	signal dout_ram, dout_uart, dout_flash : std_logic_vector(15 downto 0);
 	signal sta_uart : std_logic_vector(1 downto 0);
+	signal ctrl_uart : std_logic_vector(1 downto 0);
 	
 begin
 	ram1_en <= '1';
@@ -126,8 +125,8 @@ begin
 	u2 : uart port map(
 		clk_0 => clk_0,
 		rst => rst_ram,
+		ctrl_uart =>ctrl_uart,
 		
-		status => status,
 		din_uart => din_MEM,
 		dout_uart => dout_uart,
 		sta_uart => sta_uart,
@@ -157,6 +156,7 @@ begin
 		dout_flash => dout_flash
 	);
 	
+	
 	process(addr_MEM)
 	begin
 		case addr_MEM is
@@ -170,12 +170,10 @@ begin
 				ramtype <= RAM_PORT;
 		end case;
 	end process;
-	
---	ramtype <= UART_PORT when addr_MEM = x"BF00"
---			else UART_TEST when addr_MEM = x"BF01"
---			else FLASH_PORT when addr_MEM = x"BF02"
---			else RAM_PORT;
+
+	en_MEM <= oe_MEM or we_MEM;
 	status <= ramtype & oe_MEM & we_MEM;
+	ctrl_uart <= oe_MEM & we_MEM when addr_MEM = x"BF00" else "00";
 	
 	process(status, dout_ram, dout_ram, dout_uart, sta_uart, dout_flash, din_MEM)
 	begin
@@ -188,44 +186,19 @@ begin
 				dout_MEM <= ZERO14 & sta_uart;
 			when read_flash =>
 				dout_MEM <= dout_flash;
---				dout_MEM <= x"0001";
 			when others => 
 				dout_MEM <= din_MEM;
 		end case;
 	end process;
-	
---	dout_MEM <= dout_ram when status = read_ram
---			 else dout_uart when status = read_uart
---			 else ZERO14 & sta_uart when status = test_uart
---			 else dout_flash when status = read_flash
---			 else din_MEM;
-			 
-	addr_out <= din_MEM;
+
 	process(clk)
 	begin
 		if(clk'event and clk = '1')then
 			rst_ram <= rst;
-			if(rst = '0')then
-				read_pc <= '1';
-			elsif(read_pc = '0')then
-				read_pc <= '1';
-			else
-				if((status = read_ram or status = write_ram))then
-					read_pc <= '0';
-				end if;
-			end if;
+			read_pc <= (not rst) or (not read_pc) or (not en_MEM);
 		end if;
 	end process;
 	
-	process(clk)
-	begin
-		if(clk'event and clk = '0') then
-			if(read_pc = '1' and (status = read_ram or status = write_ram)) then
-				stop <= '1';
-			else 
-				stop <= '0';
-			end if;
-		end if;
-	end process;
-			
+	stop <= read_pc and en_MEM when clk'event and clk = '0';
+
 end Behavioral;

@@ -21,7 +21,7 @@ package const is
 	constant ALU_XOR : std_logic_vector(3 downto 0) := "1001";
 	constant ALU_CMP : std_logic_vector(3 downto 0) := "1010";
 	constant ALU_SLT : std_logic_vector(3 downto 0) := "1011";
-	constant ALU_SLTI : std_logic_vector(3 downto 0) := "1100";
+	constant ALU_SLTU : std_logic_vector(3 downto 0) := "1100";
 	
 	constant RAM_PORT : std_logic_vector(1 downto 0) := "00";
 	constant UART_PORT : std_logic_vector(1 downto 0) := "01";
@@ -36,8 +36,11 @@ package const is
 	constant read_flash : std_logic_vector(3 downto 0) := "1110";
 	constant write_flash : std_logic_vector(3 downto 0) := "1101";
 	
+	constant read_data : std_logic_vector(1 downto 0) := "10";
+	constant write_data : std_logic_vector(1 downto 0) := "01";
+	
 	constant uart_ready : std_logic_vector(2 downto 0) := "000";
-	constant read_next : std_logic_vector(2 downto 0) := "001";
+	constant read_next  : std_logic_vector(2 downto 0) := "001";
 	constant write_next : std_logic_vector(2 downto 0) := "010";
 	constant write_wait : std_logic_vector(2 downto 0) := "011";			
 	constant write_tbre : std_logic_vector(2 downto 0) := "100";
