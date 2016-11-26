@@ -24,40 +24,41 @@ end flash;
 architecture Behavioral of flash is
 type status_type is (read1, read2, read3, read4, read_final, keep1, keep2);
 signal flash_status : status_type;
-signal to_input_addr : std_logic_vector(15 downto 0);
+--signal to_input_addr : std_logic_vector(15 downto 0);
 begin
 	flash_byte <= '1';
 	flash_vpen <= '1';
 	flash_ce <= '0';
 	flash_rp <= '1';
 	dout_flash <= flash_data;
-	flash_addr(22 downto 0) <= "000000" & to_input_addr & "0";
+	flash_data <= x"00FF" when (status = write_flash) else (others => 'Z');
 	process (clk_0, rst, status, flash_status, input_addr)
 	begin
-		if (clk_0'event and clk_0 = '1')then
+		if (clk_0'event and clk_0 = '0')then
 			if (rst = '0')then
 				flash_status <= read1;
 				flash_we <= '1';
 				flash_oe <= '1';
-				flash_data <= (others => 'Z');
-				to_input_addr <= (others => '0');
+--				flash_data <= (others => 'Z');
+--				to_input_addr <= (others => '0');
 			else 
 				case flash_status is
 					when read1 =>
 						if (status = write_flash)then
 							flash_we <= '0';
-							flash_data <= x"00FF";
+--							flash_data <= x"00FF";
 							flash_status <= read2;
 						elsif (status = read_flash)then
 							flash_oe <= '0';
-							flash_data <= (others => 'Z');
+--							flash_data <= (others => 'Z');
 							flash_status <= read3;
 						end if;
 					when read2 => 
 						flash_we <= '1';
-						flash_data <= x"00FF";
+--						flash_data <= x"00FF";
 						flash_status <= read1;
-						to_input_addr <= input_addr;
+--						to_input_addr <= input_addr;
+						flash_addr(22 downto 0) <= "000000" & input_addr & "0";
 					when read3 =>
 						flash_status <= read1;
 						flash_oe <= '1';
