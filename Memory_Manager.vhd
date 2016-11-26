@@ -60,7 +60,7 @@ architecture Behavioral of Memory_manager is
 	component uart is
 		port(
 			clk_0, rst: in std_logic;
-			ctrl_uart: in std_logic_vector(1 downto 0);
+			status: in std_logic_vector(3 downto 0);
 		
 			din_uart: in std_logic_vector(15 downto 0);
 			dout_uart: out std_logic_vector(15 downto 0);
@@ -96,7 +96,6 @@ architecture Behavioral of Memory_manager is
 	signal status : std_logic_vector(3 downto 0);
 	signal dout_ram, dout_uart, dout_flash : std_logic_vector(15 downto 0);
 	signal sta_uart : std_logic_vector(1 downto 0);
-	signal ctrl_uart : std_logic_vector(1 downto 0);
 	
 begin
 	ram1_en <= '1';
@@ -125,7 +124,7 @@ begin
 	u2 : uart port map(
 		clk_0 => clk_0,
 		rst => rst_ram,
-		ctrl_uart =>ctrl_uart,
+		status => status,
 		
 		din_uart => din_MEM,
 		dout_uart => dout_uart,
@@ -156,7 +155,6 @@ begin
 		dout_flash => dout_flash
 	);
 	
-	
 	process(addr_MEM)
 	begin
 		case addr_MEM is
@@ -171,10 +169,6 @@ begin
 		end case;
 	end process;
 
-	en_MEM <= oe_MEM or we_MEM;
-	status <= ramtype & oe_MEM & we_MEM;
-	ctrl_uart <= oe_MEM & we_MEM when addr_MEM = x"BF00" else "00";
-	
 	process(status, dout_ram, dout_ram, dout_uart, sta_uart, dout_flash, din_MEM)
 	begin
 		case status is
@@ -183,7 +177,7 @@ begin
 			when read_uart =>
 				dout_MEM <= dout_uart;
 			when test_uart =>
-				dout_MEM <= ZERO14 & sta_uart;
+				dout_MEM <= x"000" & "00" & sta_uart;
 			when read_flash =>
 				dout_MEM <= dout_flash;
 			when others => 
@@ -191,14 +185,24 @@ begin
 		end case;
 	end process;
 
+	en_MEM <= oe_MEM or we_MEM;
+	stop <= read_pc and en_MEM when clk'event and clk = '0';
+	
 	process(clk)
 	begin
 		if(clk'event and clk = '1')then
 			rst_ram <= rst;
-			read_pc <= (not rst) or (not read_pc) or (not en_MEM);
+			if(rst = '0')then
+				read_pc <= '1';
+				status <= wait_ram;
+			elsif(read_pc = '0')then
+				read_pc <= '1';
+				status <= wait_ram;
+			elsif(en_MEM = '1')then
+				read_pc <= '0';
+				status <= ramtype & oe_MEM & we_MEM;
+			end if;
 		end if;
 	end process;
-	
-	stop <= read_pc and en_MEM when clk'event and clk = '0';
 
 end Behavioral;

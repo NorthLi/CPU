@@ -5,7 +5,7 @@ use work.const.ALL;
 entity uart is
 	port(
 		clk_0, rst: in std_logic;
-		ctrl_uart: in std_logic_vector(1 downto 0);
+		status: in std_logic_vector(3 downto 0);
 		
 		din_uart: in std_logic_vector(15 downto 0);
 		dout_uart: out std_logic_vector(15 downto 0);
@@ -22,7 +22,9 @@ architecture Behavioral of uart is
 	signal ust: std_logic_vector(2 downto 0);
 begin
 	sta_uart <= data_ready & "1" when ust = uart_ready else "00";
-	ram1_address <=  x"00" & ctrl_uart & sta_uart & ust & data_ready & tbre & tsre;
+	ram1_address <=  "000000" & status & sta_uart & ust & data_ready & tbre & tsre;
+	ram1_data <= din_uart when status = write_uart else (others => 'Z');
+	dout_uart <= ram1_data;
 
 	process(clk_0)
 	begin
@@ -34,24 +36,19 @@ begin
 			else
 				case ust is
 					when uart_ready =>
-						case ctrl_uart is
-							when read_data =>
+						case status is
+							when read_uart =>
 								rdn <= '0';
-								ram1_data <= (others => 'Z');
 								ust <= read_next;
-							when write_data =>
+							when write_uart =>
 								wrn <= '0';
-								ram1_data <= din_uart;
 								ust <= write_next;
 							when others =>
 						end case;
 					when read_next =>
-						dout_uart <= ram1_data;
 						rdn <= '1';
 						ust <= uart_ready;
 					when write_next =>
-						ust <= write_wait;
-					when write_wait =>
 						wrn <= '1';
 						ust <= write_tbre;
 					when write_tbre =>

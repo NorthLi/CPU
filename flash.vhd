@@ -22,15 +22,17 @@ entity flash is
 end flash;
 
 architecture Behavioral of flash is
-type status_type is (read1, read2, read3, read4, read_final, keep1, keep2);
-signal flash_status : status_type;
+	type status_type is (read1, read2, read3, read4, read_final, keep1, keep2);
+	signal flash_status : status_type;
 begin
+
 	flash_byte <= '1';
 	flash_vpen <= '1';
 	flash_ce <= '0';
 	flash_rp <= '1';
-	dout_flash <= flash_data;
 	flash_data <= x"00FF" when (status = write_flash) else (others => 'Z');
+	dout_flash <= flash_data;
+	
 	process (clk_0, rst, status, flash_status, input_addr)
 	begin
 		if (clk_0'event and clk_0 = '0')then
@@ -51,7 +53,7 @@ begin
 					when read2 => 
 						flash_we <= '1';
 						flash_status <= read1;
-						flash_addr(22 downto 0) <= "000000" & input_addr & "0";
+						flash_addr <= "000000" & input_addr & "0";
 					when read3 =>
 						flash_status <= read1;
 						flash_oe <= '1';
@@ -60,4 +62,5 @@ begin
 			end if;
 		end if;
 	end process;
+	
 end Behavioral;

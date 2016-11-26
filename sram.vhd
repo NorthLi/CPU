@@ -36,7 +36,10 @@ begin
 		input_addr => pc_ram,
 		output_ins => output_ins
 	);
+	
 	ram2_address(17 downto 16) <= "00";
+	ram2_data <= din_ram when status = write_ram else (others => 'Z');
+	dout_ram <= ram2_data;
 	
 	process(clk_0)
 	begin
@@ -44,26 +47,22 @@ begin
 			if(rst = '0') then
 				fist_period <= '0';
 				ins_ram <= x"0800";
-				dout_ram <= x"0800";
 			elsif(fist_period = '0')then
 				fist_period <= '1';
 				if(read_pc = '1')then
 					ram2_we <= '1';
 					ram2_oe <= '0';
 					ram2_address(15 downto 0) <=pc_ram;
-					ram2_data <= (others => 'Z');
 				else
 					case status is
 						when read_ram =>
 							ram2_we <= '1';
 							ram2_oe <= '0';
 							ram2_address(15 downto 0) <= addr_ram;
-							ram2_data <= (others => 'Z');
 						when write_ram =>
 							ram2_oe <= '1';
 							ram2_we <= '0';
 							ram2_address(15 downto 0) <= addr_ram;
-							ram2_data <= din_ram;
 						when others =>
 							ram2_oe <= '1';
 							ram2_we <= '1';
@@ -79,8 +78,6 @@ begin
 					else
 						ins_ram <= ram2_data;
 					end if;
-				else
-					dout_ram <= ram2_data;
 				end if;
 			end if;
 		end if;
