@@ -8,7 +8,7 @@ entity flash is
 	port(
 		clk_0, rst: in std_logic;
 		input_addr : in std_logic_vector(15 downto 0);
-		status : in std_logic_vector(3 downto 0);
+		status : in std_logic_vector(4 downto 0);
 		flash_byte : out std_logic;
 		flash_vpen : out std_logic;
 		flash_ce   : out std_logic;

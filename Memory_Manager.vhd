@@ -46,7 +46,7 @@ architecture Behavioral of Memory_manager is
 			pc_ram: in std_logic_vector(15 downto 0);
 			ins_ram: out std_logic_vector(15 downto 0);
 			
-			status: in std_logic_vector(3 downto 0);
+			status: in std_logic_vector(4 downto 0);
 			addr_ram: in std_logic_vector(15 downto 0);
 			din_ram: in std_logic_vector(15 downto 0);
 			dout_ram: out std_logic_vector(15 downto 0);
@@ -60,7 +60,7 @@ architecture Behavioral of Memory_manager is
 	component uart is
 		port(
 			clk_0, rst: in std_logic;
-			status: in std_logic_vector(3 downto 0);
+			status: in std_logic_vector(4 downto 0);
 		
 			din_uart: in std_logic_vector(15 downto 0);
 			dout_uart: out std_logic_vector(15 downto 0);
@@ -77,7 +77,7 @@ architecture Behavioral of Memory_manager is
 		port(
 			clk_0, rst: in std_logic;
 			input_addr : in std_logic_vector(15 downto 0);
-			status : in std_logic_vector(3 downto 0);
+			status : in std_logic_vector(4 downto 0);
 			flash_byte : out std_logic;
 			flash_vpen : out std_logic;
 			flash_ce   : out std_logic;
@@ -92,8 +92,8 @@ architecture Behavioral of Memory_manager is
 			
 	
 	signal read_pc, rst_ram, en_MEM: std_logic;
-	signal ramtype :std_logic_vector(1 downto 0);
-	signal status : std_logic_vector(3 downto 0);
+	signal ramtype :std_logic_vector(2 downto 0);
+	signal status : std_logic_vector(4 downto 0);
 	signal dout_ram, dout_uart, dout_flash : std_logic_vector(15 downto 0);
 	signal sta_uart : std_logic_vector(1 downto 0);
 	
@@ -155,20 +155,10 @@ begin
 		dout_flash => dout_flash
 	);
 	
-	process(addr_MEM)
-	begin
-		case addr_MEM is
-			when x"BF00" =>
-				ramtype <= UART_PORT;
-			when x"BF01" =>
-				ramtype <= UART_TEST;
-			when x"BF02" =>
-				ramtype <= FLASH_PORT;
-			when others =>
-				ramtype <= RAM_PORT;
-		end case;
-	end process;
-
+	en_MEM <= oe_MEM or we_MEM;
+	ramtype <= addr_MEM(2 downto 0) when addr_MEM(15 downto 3) = x"BF0" & '0' else "111";
+	stop <= read_pc and en_MEM when clk'event and clk = '0';
+	
 	process(status, dout_ram, dout_ram, dout_uart, sta_uart, dout_flash, din_MEM)
 	begin
 		case status is
@@ -184,9 +174,6 @@ begin
 				dout_MEM <= din_MEM;
 		end case;
 	end process;
-
-	en_MEM <= oe_MEM or we_MEM;
-	stop <= read_pc and en_MEM when clk'event and clk = '0';
 	
 	process(clk)
 	begin

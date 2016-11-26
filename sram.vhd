@@ -9,7 +9,7 @@ entity sram is
 		pc_ram: in std_logic_vector(15 downto 0);
 		ins_ram: out std_logic_vector(15 downto 0);
 		
-		status: in std_logic_vector(3 downto 0);
+		status: in std_logic_vector(4 downto 0);
 		addr_ram: in std_logic_vector(15 downto 0);
 		din_ram: in std_logic_vector(15 downto 0);
 		dout_ram: out std_logic_vector(15 downto 0);

@@ -23,22 +23,15 @@ package const is
 	constant ALU_SLT : std_logic_vector(3 downto 0) := "1011";
 	constant ALU_SLTU : std_logic_vector(3 downto 0) := "1100";
 	
-	constant UART_PORT  : std_logic_vector(1 downto 0) := "00";
-	constant UART_TEST  : std_logic_vector(1 downto 0) := "01";
-	constant FLASH_PORT : std_logic_Vector(1 downto 0) := "10";
-	constant RAM_PORT   : std_logic_vector(1 downto 0) := "11";
-	
-	
-	constant read_uart   : std_logic_vector(3 downto 0) := "0010";
-	constant write_uart  : std_logic_vector(3 downto 0) := "0001";
-	constant test_uart   : std_logic_vector(3 downto 0) := "0110";
-	constant read_flash  : std_logic_vector(3 downto 0) := "1010";
-	constant write_flash : std_logic_vector(3 downto 0) := "1001";
-	constant read_ram    : std_logic_vector(3 downto 0) := "1110";
-	constant write_ram   : std_logic_vector(3 downto 0) := "1101";
-	constant wait_ram    : std_logic_vector(3 downto 0) := "1111";
+	constant read_uart   : std_logic_vector(4 downto 0) := "00010";
+	constant write_uart  : std_logic_vector(4 downto 0) := "00001";
+	constant test_uart   : std_logic_vector(4 downto 0) := "00110";
+	constant read_flash  : std_logic_vector(4 downto 0) := "01010";
+	constant write_flash : std_logic_vector(4 downto 0) := "01001";
+	constant read_ram    : std_logic_vector(4 downto 0) := "11110";
+	constant write_ram   : std_logic_vector(4 downto 0) := "11101";
+	constant wait_ram    : std_logic_vector(4 downto 0) := "11111";
 
-	
 	constant uart_ready : std_logic_vector(2 downto 0) := "000";
 	constant read_next  : std_logic_vector(2 downto 0) := "001";
 	constant write_next : std_logic_vector(2 downto 0) := "010";
