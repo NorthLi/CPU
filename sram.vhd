@@ -49,25 +49,23 @@ begin
 				ins_ram <= x"0800";
 			elsif(fist_period = '0')then
 				fist_period <= '1';
-				if(read_pc = '1')then
-					ram2_we <= '1';
-					ram2_oe <= '0';
-					ram2_address(15 downto 0) <=pc_ram;
-				else
-					case status is
-						when read_ram =>
-							ram2_we <= '1';
-							ram2_oe <= '0';
-							ram2_address(15 downto 0) <= addr_ram;
-						when write_ram =>
-							ram2_oe <= '1';
-							ram2_we <= '0';
-							ram2_address(15 downto 0) <= addr_ram;
-						when others =>
-							ram2_oe <= '1';
-							ram2_we <= '1';
-					end case;
-				end if;
+				case status is
+					when wait_ram =>
+						ram2_we <= '1';
+						ram2_oe <= '0';
+						ram2_address(15 downto 0) <=pc_ram;
+					when read_ram =>
+						ram2_we <= '1';
+						ram2_oe <= '0';
+						ram2_address(15 downto 0) <= addr_ram;
+					when write_ram =>
+						ram2_oe <= '1';
+						ram2_we <= '0';
+						ram2_address(15 downto 0) <= addr_ram;
+					when others =>
+						ram2_oe <= '1';
+						ram2_we <= '1';
+				end case;
 			else
 				fist_period <= '0';
 				ram2_oe <= '1';
