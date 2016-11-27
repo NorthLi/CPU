@@ -100,7 +100,6 @@ architecture Behavioral of Memory_manager is
 			status : in std_logic_vector(4 downto 0);
 			dina : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
 			clkb : IN STD_LOGIC;
-			enb : IN STD_LOGIC;
 			addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
 			doutb : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
 		);
@@ -182,11 +181,10 @@ begin
 	);
 	
 	u4 : D_RAM_controller port map(
-		clka => clk_0,
+		clka => clk,
 		status => status,
 		dina => din_MEM,
-		clkb => clk,
-		enb => '1',
+		clkb => clk_0,
 		addrb => addrb,
 		doutb => doutb
 	);

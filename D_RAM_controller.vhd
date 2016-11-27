@@ -37,7 +37,6 @@ entity D_RAM_controller is
 	status : in std_logic_vector(4 downto 0);
     dina : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
     clkb : IN STD_LOGIC;
-    enb : IN STD_LOGIC;
     addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
     doutb : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
   );
@@ -52,7 +51,7 @@ architecture Behavioral of D_RAM_controller is
 			addra : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
 			dina : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
 			clkb : IN STD_LOGIC;
-			enb : IN STD_LOGIC;
+			enb : in std_logic;
 			addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
 			doutb : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
 		);
@@ -61,12 +60,13 @@ architecture Behavioral of D_RAM_controller is
 	signal addra : std_logic_vector(14 downto 0) := (others => '0');
 	signal ena : std_logic := '1';
 	signal wea : std_logic_vector(0 downto 0);
+	signal status_w : std_logic := '0';
 
 begin
 
 	u1 : D_RAM port map(
 		clka => clka,
-		ena => ena,
+		ena => '1',
 		wea => wea,
 		addra => addra,
 		dina => dina,
@@ -76,18 +76,18 @@ begin
 		doutb => doutb
 	);
 	
-	process(status)
+	process(clka)
 	begin
-		ena <= '1';
-		if status(4 downto 2) = "100" then 
-			wea <= "1";
-			addra <= addra + 1;
-		else 
-			wea <= "0";
+		if clka'event and clka = '0' then
+				if status(4 downto 2) = "100" then 
+					wea <= "1";
+					addra <= addra + 1;
+				else 
+					wea <= "0";
+				end if;
 		end if;
 	end process;
 			
-
 
 end Behavioral;
 
