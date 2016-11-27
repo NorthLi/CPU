@@ -81,8 +81,9 @@ begin
 		if clka'event and clka = '0' then
 				if status(4 downto 2) = "100" then 
 					wea <= "1";
-					addra <= addra + 1;
-				else 
+				elsif status(4 downto 2) = "101" then
+					addra <= dina(14 downto 0);
+				else
 					wea <= "0";
 				end if;
 		end if;

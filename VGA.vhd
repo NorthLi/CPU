@@ -132,40 +132,40 @@ begin
 			g1 <= "000";
 			b1 <= "000";
 		elsif(clk'event and clk = '1') then 
-			if vector_x < 512 and vector_x >= 0 and vector_y < 480 and vector_y >= 0 then
+			if vector_x < 515 and vector_x >= 3 and vector_y < 480 and vector_y >= 0 then
 				address <= "0000" & vector_y(8 downto 4) & vector_x(8 downto 3);
 				address_rom <= data(6 downto 0) &  vector_y(3 downto 1);
 				if vector_y(0) = '1' then
 					case vector_x(2 downto 0) is
-						when "010" => 
+						when "011" => 
 							r1 <= (others => q(7));
 							g1 <= (others => q(7));
 							b1 <= (others => q(7));
-						when "011" => 
+						when "100" => 
 							r1 <= (others => q(6));
 							g1 <= (others => q(6));
 							b1 <= (others => q(6));
-						when "100" => 
+						when "101" => 
 							r1 <= (others => q(5));
 							g1 <= (others => q(5));
 							b1 <= (others => q(5));
-						when "101" => 
+						when "110" => 
 							r1 <= (others => q(4));
 							g1 <= (others => q(4));
 							b1 <= (others => q(4));
-						when "110" => 
+						when "111" => 
 							r1 <= (others => q(3));
 							g1 <= (others => q(3));
 							b1 <= (others => q(3));
-						when "111" => 
+						when "000" => 
 							r1 <= (others => q(2));
 							g1 <= (others => q(2));
 							b1 <= (others => q(2));
-						when "000" => 
+						when "001" => 
 							r1 <= (others => q(1));
 							g1 <= (others => q(1));
 							b1 <= (others => q(1));
-						when "001" => 
+						when "010" => 
 							r1 <= (others => q(0));
 							g1 <= (others => q(0));
 							b1 <= (others => q(0));
@@ -176,35 +176,35 @@ begin
 					end case;
 				else
 					case vector_x(2 downto 0) is
-						when "010" => 
+						when "011" => 
 							r1 <= (others => q(15));
 							g1 <= (others => q(15));
 							b1 <= (others => q(15));
-						when "011" => 
+						when "100" => 
 							r1 <= (others => q(14));
 							g1 <= (others => q(14));
 							b1 <= (others => q(14));
-						when "100" => 
+						when "101" => 
 							r1 <= (others => q(13));
 							g1 <= (others => q(13));
 							b1 <= (others => q(13));
-						when "101" => 
+						when "110" => 
 							r1 <= (others => q(12));
 							g1 <= (others => q(12));
 							b1 <= (others => q(12));
-						when "110" => 
+						when "111" => 
 							r1 <= (others => q(11));
 							g1 <= (others => q(11));
 							b1 <= (others => q(11));
-						when "111" => 
+						when "000" => 
 							r1 <= (others => q(10));
 							g1 <= (others => q(10));
 							b1 <= (others => q(10));
-						when "000" => 
+						when "001" => 
 							r1 <= (others => q(9));
 							g1 <= (others => q(9));
 							b1 <= (others => q(9));
-						when "001" => 
+						when "010" => 
 							r1 <= (others => q(8));
 							g1 <= (others => q(8));
 							b1 <= (others => q(8));
