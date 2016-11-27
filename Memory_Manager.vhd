@@ -27,6 +27,9 @@ entity Memory_Manager is
 		rdn, wrn: out std_logic;
 		data_ready, tbre, tsre: in std_logic;
 		
+		addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+		doutb : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+		
 		flash_byte : out std_logic;
 		flash_vpen : out std_logic;
 		flash_ce   : out std_logic;
@@ -87,6 +90,18 @@ architecture Behavioral of Memory_manager is
 			flash_addr : out std_logic_vector(22 downto 0);
 			flash_data : inout std_logic_vector(15 downto 0);
 			dout_flash : out std_logic_vector(15 downto 0)
+		);
+	end component;
+	
+	component D_RAM_controller is
+		port(
+			clka : IN STD_LOGIC;
+			status : in std_logic_vector(4 downto 0);
+			dina : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+			clkb : IN STD_LOGIC;
+			enb : IN STD_LOGIC;
+			addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+			doutb : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
 		);
 	end component;
 			
@@ -155,6 +170,17 @@ begin
 		dout_flash => dout_flash
 	);
 	
+	u4 : D_RAM_controller port map(
+		clka => clk_0,
+		status => status,
+		dina => din_MEM,
+		clkb => clk,
+		enb => '1',
+		addrb => addrb,
+		doutb => doutb
+	);
+	
+	
 	en_MEM <= oe_MEM or we_MEM;
 	ramtype <= addr_MEM(2 downto 0) when addr_MEM(15 downto 3) = x"BF0" & '0' else "111";
 	stop <= read_pc and en_MEM when clk'event and clk = '0';
@@ -162,7 +188,7 @@ begin
 	process(status, dout_ram, dout_ram, dout_uart, sta_uart, dout_flash, din_MEM)
 	begin
 		case status is
-			when read_ram => 
+			when read_ram =>
 				dout_MEM <= dout_ram;
 			when read_uart =>
 				dout_MEM <= dout_uart;

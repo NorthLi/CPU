@@ -21,6 +21,9 @@ entity Thinpad is
 		rdn, wrn: out std_logic;
 		data_ready, tbre, tsre: in std_logic;
 		
+		hs,vs       :         out STD_LOGIC;
+		r,g,b       :         out STD_LOGIC_vector(2 downto 0);
+		
 		flash_byte : out std_logic;
 		flash_vpen : out std_logic;
 		flash_ce   : out std_logic;
@@ -68,7 +71,7 @@ architecture Behavioral of Thinpad is
 		
 	component EX_MEM is
 		port(
-			clk, rst: in std_logic;
+			clk, rst: in std_logic; 
 			stop: in std_logic;
 			
 			rz_EX: in std_logic_vector(3 downto 0);
@@ -173,6 +176,9 @@ architecture Behavioral of Thinpad is
 			rdn, wrn: out std_logic;
 			data_ready, tbre, tsre: in std_logic;
 			
+			addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+			doutb : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+			
 			flash_byte : out std_logic;
 			flash_vpen : out std_logic;
 			flash_ce   : out std_logic;
@@ -182,6 +188,27 @@ architecture Behavioral of Thinpad is
 			flash_addr : out std_logic_vector(22 downto 0);
 			flash_data : inout std_logic_vector(15 downto 0)
 			);
+	end component;
+	
+	component VGA is
+		port(
+			address		:		  out	STD_LOGIC_VECTOR(14 DOWNTO 0);
+			address_rom	:		out std_logic_vector(9 downto 0);
+			reset       :         in  STD_LOGIC;
+			data 			:			in std_logic_vector(15 downto 0);
+			q		    	:		  in STD_LOGIC_vector(15 downto 0);
+			clk       	:         in  STD_LOGIC;
+			hs,vs       :         out STD_LOGIC;
+			r,g,b       :         out STD_LOGIC_vector(2 downto 0)
+		);
+	end component;
+	
+	component VGA_ROM is
+		port(
+			clka : IN STD_LOGIC;
+			addra : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+			douta : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
+	);
 	end component;
 	
 	-- Control Signal
@@ -229,6 +256,14 @@ architecture Behavioral of Thinpad is
 	signal datax_reg, datay_reg: std_logic_vector(15 downto 0);
 	signal dout_MEM: std_logic_vector(15 downto 0);
 	signal dataz_ALU: std_logic_vector(15 downto 0);
+	
+	--VGA
+	signal address : STD_LOGIC_VECTOR(14 DOWNTO 0);
+	signal address_rom : std_logic_vector(9 downto 0);
+	signal q : STD_LOGIC_vector(15 downto 0);
+	signal data : STD_LOGIC_vector(15 downto 0);
+	
+	
 	
 begin
 	clk <= not clk when clk_0'event and clk_0 = '1';
@@ -374,6 +409,9 @@ begin
 		tbre => tbre,
 		tsre => tsre,
 		
+		addrb => address,
+		doutb => data,
+		
 		flash_byte => flash_byte,
 		flash_vpen => flash_vpen,
 		flash_ce => flash_ce,
@@ -395,6 +433,27 @@ begin
 		rz_WB => rz_WB,
 		dataz_WB => dataz_WB
 	);
+	
+	u10: VGA port map(
+		clk => clk,
+		reset => rst,
+		address => address,
+		address_rom => address_rom,
+		data => data,
+		q => q,
+		hs => hs,
+		vs => vs,
+		r => r,
+		g => g,
+		b => b
+	);
+	
+	u11: VGA_ROM port map(
+		clka => clk,
+		addra => address_rom,
+		douta => q
+	);
+		
 	
 	-- MEM_Choose
 	din_EX <= dataz_EX when (oe_EX or we_EX) = '1'
