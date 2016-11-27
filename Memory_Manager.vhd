@@ -34,7 +34,9 @@ entity Memory_Manager is
 		flash_we   : out std_logic;
 		flash_rp   : out std_logic;
 		flash_addr : out std_logic_vector(22 downto 0);
-		flash_data : inout std_logic_vector(15 downto 0)
+		flash_data : inout std_logic_vector(15 downto 0);
+		
+		datain, clkin : in std_logic
 	);
 end Memory_Manager;
 
@@ -66,7 +68,6 @@ architecture Behavioral of Memory_manager is
 			dout_uart: out std_logic_vector(15 downto 0);
 			sta_uart: buffer std_logic_vector(1 downto 0);
 			
-			ram1_address: out std_logic_vector(17 downto 0);
 			ram1_data: inout std_logic_vector(15 downto 0);
 			rdn, wrn: out std_logic;
 			data_ready, tbre, tsre: in std_logic
@@ -89,12 +90,23 @@ architecture Behavioral of Memory_manager is
 			dout_flash : out std_logic_vector(15 downto 0)
 		);
 	end component;
+	
+	component keyboard is
+		port(
+			datain, clkin : in std_logic ; -- PS2 clk and data
+			fclk, rst : in std_logic ;  -- filter clock
 			
+			status: in std_logic_vector(4 downto 0);
+			dout_key: out std_logic_vector(7 downto 0)
+		);
+	end component;
 	
 	signal read_pc, rst_ram, en_MEM: std_logic;
 	signal ramtype :std_logic_vector(2 downto 0);
 	signal status : std_logic_vector(4 downto 0);
+	
 	signal dout_ram, dout_uart, dout_flash : std_logic_vector(15 downto 0);
+	signal dout_key : std_logic_vector(7 downto 0);
 	signal sta_uart : std_logic_vector(1 downto 0);
 	
 begin
@@ -102,7 +114,7 @@ begin
 	ram1_oe <= '1';
 	ram1_we <= '1';
 	ram2_en <= '0';
-	
+			
 	u1: sram port map(
 		clk_0 => clk_0,
 		rst => rst_ram,
@@ -130,7 +142,6 @@ begin
 		dout_uart => dout_uart,
 		sta_uart => sta_uart,
 		
-		ram1_address => ram1_address,
 		ram1_data => ram1_data,
 		rdn => rdn,
 		wrn => wrn,
@@ -155,11 +166,22 @@ begin
 		dout_flash => dout_flash
 	);
 	
+	u5 : keyboard port map(
+		datain => datain,
+		clkin => clkin,
+		fclk => clk_0,
+		rst => rst,
+		status => status,
+		dout_key => dout_key
+	);
+	
+	ram1_address <= status & dout_key & sta_uart & data_ready & tbre & tsre;
+	
 	en_MEM <= oe_MEM or we_MEM;
 	ramtype <= addr_MEM(2 downto 0) when addr_MEM(15 downto 3) = x"BF0" & '0' else "111";
 	stop <= read_pc and en_MEM when clk'event and clk = '0';
 	
-	process(status, dout_ram, dout_ram, dout_uart, sta_uart, dout_flash, din_MEM)
+	process(status, dout_ram, dout_ram, dout_uart, sta_uart, dout_flash, din_MEM, dout_key)
 	begin
 		case status is
 			when read_ram => 
@@ -170,6 +192,8 @@ begin
 				dout_MEM <= x"000" & "00" & sta_uart;
 			when read_flash =>
 				dout_MEM <= dout_flash;
+			when read_key=>
+				dout_MEM <= x"00" & dout_key;
 			when others => 
 				dout_MEM <= din_MEM;
 		end case;

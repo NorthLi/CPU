@@ -144,6 +144,10 @@ NET "flash_rp" LOC = D1;
 NET "flash_vpen" LOC = C2;
 NET "flash_we" LOC = D4;
 
-# PlanAhead Generated physical constraints 
 
 NET "flash_addr[0]" LOC = T2;
+
+# PlanAhead Generated physical constraints 
+
+NET "clkin" LOC = U6;
+NET "datain" LOC = V6;

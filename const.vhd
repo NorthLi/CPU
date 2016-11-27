@@ -28,6 +28,8 @@ package const is
 	constant test_uart   : std_logic_vector(4 downto 0) := "00110";
 	constant read_flash  : std_logic_vector(4 downto 0) := "01010";
 	constant write_flash : std_logic_vector(4 downto 0) := "01001";
+	constant read_key    : std_logic_vector(4 downto 0) := "01110";
+	constant write_vga   : std_logic_vector(4 downto 0) := "10001";	
 	constant read_ram    : std_logic_vector(4 downto 0) := "11110";
 	constant write_ram   : std_logic_vector(4 downto 0) := "11101";
 	constant wait_ram    : std_logic_vector(4 downto 0) := "11111";

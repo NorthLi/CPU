@@ -119,6 +119,7 @@ begin
 			when "01100" => 
 				if(rx(2 downto 0) = "000") then --BTEQZ
 					rx_reg <= REG_T;
+					rx_ID <= REG_T;
 					if(reg_data1 = "0000000000000000") then 
 						pc_ctrl <= '1';
 						temp(15 downto 8) := (others => ins_ID(7));
@@ -137,6 +138,7 @@ begin
 					rz_ID <= REG_SP;
 				elsif(rx(2 downto 0) = "001") then --BTNEZ
 					rx_reg <= REG_T;
+					rx_ID <= REG_T;
 					if(not(reg_data1 = "0000000000000000")) then 
 						pc_ctrl <= '1';
 						temp(15 downto 8) := (others => ins_ID(7));
@@ -234,6 +236,7 @@ begin
 					rz_ID <= rx;
 				elsif(ins_ID(7 downto 5) = "110") then --JALR
 					rx_reg <= rx;
+					rx_ID <= rx;
 				
 					datax_ID <= (others => '0');
 					datay_ID <= pc_ID + "10";
@@ -245,11 +248,13 @@ begin
 					rz_ID <= REG_RA;
 				elsif(ins_ID(7 downto 5) = "000") then --JR
 					rx_reg <= rx;
+					rx_ID <= rx;
 					
 					pc_ctrl <= '1';
 					pc_branch <= reg_data1;
 				elsif(ins_ID(7 downto 5) = "001") then --JRRA
 					rx_reg <= REG_RA;
+					rx_ID <= REG_RA;
 					
 					pc_ctrl <= '1';
 					pc_branch <= reg_data1;
@@ -268,6 +273,7 @@ begin
 				pc_branch <= pc_ID + 1 + temp;
 			when "00100" => --BEQZ
 				rx_reg <= rx;
+				rx_ID <= rx;
 				if(reg_data1 = "0000000000000000") then 
 					pc_ctrl <= '1';
 					temp(15 downto 8) := (others => ins_ID(7));
@@ -277,6 +283,7 @@ begin
 				
 			when "00101" => --BNEZ
 				rx_reg <= rx;
+				rx_ID <= rx;
 				if(not(reg_data1 = "0000000000000000")) then 
 					pc_ctrl <= '1';
 					temp(15 downto 8) := (others => ins_ID(7));
