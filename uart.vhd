@@ -11,7 +11,6 @@ entity uart is
 		dout_uart: out std_logic_vector(15 downto 0);
 		sta_uart: buffer std_logic_vector(1 downto 0);
 
-		ram1_address: out std_logic_vector(17 downto 0);
 		ram1_data: inout std_logic_vector(15 downto 0);
 		rdn, wrn: out std_logic;
 		data_ready, tbre, tsre: in std_logic
@@ -22,7 +21,6 @@ architecture Behavioral of uart is
 	signal ust: std_logic_vector(2 downto 0);
 begin
 	sta_uart <= data_ready & "1" when ust = uart_ready else "00";
-	ram1_address <=  "00000" & status & sta_uart & ust & data_ready & tbre & tsre;
 	ram1_data <= din_uart when status = write_uart else (others => 'Z');
 	dout_uart <= ram1_data;
 
