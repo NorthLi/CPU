@@ -48,8 +48,8 @@ architecture Behavioral of VGA is
 
 	signal r1, g1, b1 : STD_LOGIC_vector(2 downto 0);
 	signal hs1, vs1 : STD_LOGIC;
-	signal vector_x, temp_x : std_logic_vector(9 downto 0);
-	signal vector_y, temp_y : std_logic_vector(8 downto 0);
+	signal vector_x : std_logic_vector(9 downto 0);
+	signal vector_y : std_logic_vector(8 downto 0);
 
 begin
 
