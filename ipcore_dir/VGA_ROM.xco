@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 14.7
-# Date: Sat Nov 26 07:48:57 2016
+# Date: Mon Nov 28 13:39:11 2016
 #
 ##############################################################
 #
@@ -46,7 +46,7 @@ CSET axi_id_width=4
 CSET axi_slave_type=Memory_Slave
 CSET axi_type=AXI4_Full
 CSET byte_size=9
-CSET coe_file=.\VGA.coe
+CSET coe_file=.\VGA2.coe
 CSET collision_warnings=ALL
 CSET component_name=VGA_ROM
 CSET disable_collision_warnings=false
@@ -105,4 +105,4 @@ CSET write_width_b=16
 MISC pkg_timestamp=2012-11-19T16:22:25Z
 # END Extra information
 GENERATE
-# CRC: d2674e4a
+# CRC: c9d9c610

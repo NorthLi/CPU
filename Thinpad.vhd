@@ -456,7 +456,7 @@ begin
 	);
 	
 	u11: VGA_ROM port map(
-		clka => clk,
+		clka => not clk,
 		addra => address_rom,
 		douta => q
 	);
