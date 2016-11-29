@@ -39,6 +39,21 @@ package const is
 	constant write_next : std_logic_vector(2 downto 0) := "010";
 	constant write_tbre : std_logic_vector(2 downto 0) := "011";
 	constant write_tsre : std_logic_vector(2 downto 0) := "100";
+	
+	type INSARR is array(0 to 10) of std_logic_vector(15 downto 0);
+	constant ins_array : INSARR :=(
+		x"6e16",  -- LI R6 16
+		x"f601",  -- MTIH R6
+		x"63fe",  -- ADDSP FE
+		x"6e10",  -- LI R6 10
+		x"d600",  -- SW_SP R6 00
+		x"ee40",  -- MFPC R6
+		x"4eff",  -- ADDIU R6 FF
+		x"d601",  -- SW_SP R6 01
+		x"6e16",  -- LI R6 16
+		x"ee00",  -- JR R6
+		x"0800"   -- NOP
+	);
 end const;
 
 package body const is

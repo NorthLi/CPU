@@ -30,6 +30,12 @@ begin
 			when x"000E" => output_ins <= x"4c01";-- ADDIU R4 1
 			when x"000F" => output_ins <= x"2af7";-- BNEZ R2 F7(-9)
 			when x"0010" => output_ins <= x"0800";-- NOP
+			
+--			when x"0000" => output_ins <= x"6885"; --LI R0 85
+--			when x"0001" => output_ins <= x"3000"; --SLL R0 R0 00
+--			when x"0002" => output_ins <= x"6400"; --MTSP R0
+--			when x"0003" => output_ins <= x"6910"; --LI R1 10
+--			when x"0004" => output_ins <= x"d100"; --SW_SP R1 0
 			when others => output_ins <= x"0800";
 		end case;
 	end process;

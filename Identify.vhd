@@ -146,8 +146,8 @@ begin
 						pc_branch <= pc_ID + 1 + temp;
 					end if;
 				elsif(rx(2 downto 0) = "100") then --MTSP
-					rx_reg <= rx;
-					rx_ID <= rx;
+					rx_reg <= ry;
+					rx_ID <= ry;
 					datax_ID <= reg_data1;
 					op_ID <= "0010";
 					
