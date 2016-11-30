@@ -397,6 +397,16 @@ begin
 				dataz_ID <= reg_data2;
 				
 				we_ID <= '1';
+			when "01110" => --CMPI
+				rx_reg <= rx;
+				rx_ID <= rx;
+				
+				datax_ID <= reg_data1;
+				datay_ID(15 downto 8) <= (others => ins_ID(7));
+				datay_ID(7 downto 0) <= ins_ID(7 downto 0);
+				op_ID <= "1010";
+				
+				rz_ID <= REG_T;
 			when others =>
 		end case;
 				
