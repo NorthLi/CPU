@@ -52,4 +52,5 @@ VGA_ROM\simulation\timing\wave_mti.do
 VGA_ROM\simulation\timing\wave_ncsim.sv
 VGA_ROM_flist.txt
 VGA_ROM_xmdf.tcl
+_xmsgs\pn_parser.xmsgs
 summary.log
