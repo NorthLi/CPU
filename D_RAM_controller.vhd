@@ -58,9 +58,7 @@ architecture Behavioral of D_RAM_controller is
 	end component;
 		
 	signal addra : std_logic_vector(14 downto 0) := (others => '0');
-	signal ena : std_logic := '1';
 	signal wea : std_logic_vector(0 downto 0);
-	signal status_w : std_logic := '0';
 
 begin
 

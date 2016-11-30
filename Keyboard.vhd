@@ -123,11 +123,14 @@ begin
 			if(rst = '0')then
 				dout_key <= x"00";
 				ready <= '0';
+			elsif(status = read_key)then
+				if(fok = '1')then
+					dout_key <= code;
+				end if;
+				ready <= '0';
 			elsif(fok = '1')then
 				dout_key <= code;
 				ready <= '1';
-			elsif(status = read_key)then
-				ready <= '0';
 			elsif(ready = '0')then
 				dout_key <= x"00";
 			end if;

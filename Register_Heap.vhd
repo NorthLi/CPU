@@ -11,7 +11,8 @@ entity Register_Heap is
 		datax_reg, datay_reg: out std_logic_vector(15 downto 0);
 	
 		rz_WB: in std_logic_vector(3 downto 0);
-		dataz_WB: in std_logic_vector(15 downto 0)
+		dataz_WB: in std_logic_vector(15 downto 0);
+		FIH: out std_logic
 	);
 end Register_Heap;
 
@@ -22,6 +23,7 @@ begin
 
 	datax_reg <= regs(conv_integer(rx_reg));
 	datay_reg <= regs(conv_integer(ry_reg));
+	FIH <= regs(12)(15);
 
 	process(clk)
 	begin

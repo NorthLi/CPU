@@ -52,7 +52,9 @@ ARCHITECTURE behavior OF test0 IS
          wrn : OUT  std_logic;
          data_ready : IN  std_logic;
          tbre : IN  std_logic;
-         tsre : IN  std_logic
+         tsre : IN  std_logic;
+			datain, clkin : in std_logic;
+			clk_int: in std_logic
         );
     END COMPONENT;
     
@@ -63,6 +65,9 @@ ARCHITECTURE behavior OF test0 IS
    signal data_ready : std_logic := '0';
    signal tbre : std_logic := '0';
    signal tsre : std_logic := '0';
+	signal datain : std_logic:='0';
+	signal clkin : std_logic:='0';
+	signal clk_int : std_logic:='1';
 
 	--BiDirs
    signal ram2_data : std_logic_vector(15 downto 0);
@@ -93,7 +98,10 @@ BEGIN
           wrn => wrn,
           data_ready => data_ready,
           tbre => tbre,
-          tsre => tsre
+          tsre => tsre,
+			 datain => datain,
+			 clkin => clkin,
+			 clk_int => clk_int
         );
 
    -- Clock process definitions
@@ -108,10 +116,15 @@ BEGIN
 
    -- Stimulus process
    stim_proc: process
-   begin		
+   begin
+		clk_int <= '1';
       rst <= '0';
 		wait for 40ns;
 		rst <= '1';
+		wait for 150ns;
+		clk_int <= '0';
+		wait for 40ns;
+		clk_int <= '1';
 		wait;
    end process;
 

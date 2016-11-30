@@ -33,7 +33,8 @@ entity Thinpad is
 		flash_addr : out std_logic_vector(22 downto 0);
 		flash_data : inout std_logic_vector(15 downto 0);
 		
-		datain, clkin : in std_logic 
+		datain, clkin : in std_logic;
+		clk_int: in std_logic
 	);
 end Thinpad;
 
@@ -43,7 +44,10 @@ architecture Behavioral of Thinpad is
 		port(
 			clk, rst: in std_logic;
 			stop, bubble: in std_logic;
---			int: in std_logic;
+			
+			int: in std_logic;
+			pc_branch: in std_logic_vector(15 downto 0);
+			pc_ctrl: in std_logic;
 			
 			pc_IF: in std_logic_vector(15 downto 0);
 			ins_IF: in std_logic_vector(15 downto 0);
@@ -57,7 +61,6 @@ architecture Behavioral of Thinpad is
 		port(
 			clk, rst: in std_logic;
 			stop, bubble: in std_logic;
---			int: in std_logic;
 			
 			op_ID: in std_logic_vector(3 downto 0);
 			datax_ID, datay_ID, dataz_ID: in std_logic_vector(15 downto 0);
@@ -105,7 +108,6 @@ architecture Behavioral of Thinpad is
 		port(
 			clk, rst: in std_logic;
 			stop, bubble:in std_logic;
---			int: in std_logic;
 		
 			pc_branch: in std_logic_vector(15 downto 0);
 			pc_ctrl: in std_logic;
@@ -143,7 +145,8 @@ architecture Behavioral of Thinpad is
 			datax_reg, datay_reg: out std_logic_vector(15 downto 0);
 		
 			rz_WB: in std_logic_vector(3 downto 0);
-			dataz_WB: in std_logic_vector(15 downto 0)
+			dataz_WB: in std_logic_vector(15 downto 0);
+			FIH: out std_logic
 		);
 	end component;
 	
@@ -218,7 +221,6 @@ architecture Behavioral of Thinpad is
 	-- Control Signal
 	signal clk : std_logic := '0';
 	signal stop, bubble : std_logic; 
---	signal int: std_logic;
 	
 	-- IF_ID
 	signal pc_IF: std_logic_vector(15 downto 0);
@@ -267,7 +269,8 @@ architecture Behavioral of Thinpad is
 	signal q : STD_LOGIC_vector(15 downto 0);
 	signal data : STD_LOGIC_vector(15 downto 0);
 	
-	
+	--INT
+	signal int, FIH, clk_ready: std_logic;
 	
 begin
 	clk <= not clk when clk_0'event and clk_0 = '1';
@@ -278,7 +281,11 @@ begin
 		rst => rst,
 		stop => stop,
 		bubble => bubble,
---		int => int,
+		
+		int => int,
+		pc_branch => pc_branch,
+		pc_ctrl => pc_ctrl,
+
 		pc_IF => pc_IF,
 		ins_IF => ins_IF,
 		pc_ID => pc_ID,
@@ -290,7 +297,7 @@ begin
 		rst => rst,
 		stop => stop,
 		bubble => bubble,
---		int => int,
+
 		op_ID => op_ID,
 		datax_ID => datax_ID,
 		datay_ID => datay_ID,
@@ -329,6 +336,7 @@ begin
 		clk => clk,
 		rst => rst,
 		stop => stop,
+		
 		rz_MEM => rz_MEM,
 		dataz_MEM => dataz_MEM,
 		rz_WB => rz_WB,
@@ -340,7 +348,8 @@ begin
 		rst => rst,
 		stop => stop,
 		bubble => bubble,
---		int => int,
+
+	
 		pc_branch => pc_branch,
 		pc_ctrl => pc_ctrl,
 		pc_IF => pc_IF
@@ -438,7 +447,8 @@ begin
 		datay_reg => datay_reg,
 		
 		rz_WB => rz_WB,
-		dataz_WB => dataz_WB
+		dataz_WB => dataz_WB,
+		FIH => FIH
 	);
 	
 	u10: VGA port map(
@@ -456,12 +466,11 @@ begin
 	);
 	
 	u11: VGA_ROM port map(
-		clka => clk,
+		clka => not clk,
 		addra => address_rom,
 		douta => q
 	);
 		
-	
 	-- MEM_Choose
 	din_EX <= dataz_EX when (oe_EX or we_EX) = '1'
      	  else dataz_ALU;
@@ -477,4 +486,25 @@ begin
 	bubble <= '1' when (oe_EX = '1' and (rx_ID = rz_EX or ry_ID = rz_EX or rz_ID = rz_EX))
   	     else '0';
 		  
+	-- Int Manager
+	process(clk)
+	begin
+		if(clk'event and clk = '0')then
+			if(rst = '0')then
+				int <= '0';
+				clk_ready <= '0';
+			elsif(clk_int = '0')then
+				if(clk_ready = '0')then
+					int <= FIH;
+					clk_ready <= '1';
+				else
+					int <= '0';
+				end if;
+			else
+				int <= '0';
+				clk_ready <= '0';
+			end if;
+		end if;
+	end process;
+	
 end Behavioral;
