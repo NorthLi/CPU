@@ -46,7 +46,6 @@ architecture Behavioral of Thinpad is
 			stop, bubble: in std_logic;
 			
 			int: in std_logic;
-			pc_branch: in std_logic_vector(15 downto 0);
 			pc_ctrl: in std_logic;
 			
 			pc_IF: in std_logic_vector(15 downto 0);
@@ -283,7 +282,6 @@ begin
 		bubble => bubble,
 		
 		int => int,
-		pc_branch => pc_branch,
 		pc_ctrl => pc_ctrl,
 
 		pc_IF => pc_IF,
@@ -348,7 +346,6 @@ begin
 		rst => rst,
 		stop => stop,
 		bubble => bubble,
-
 	
 		pc_branch => pc_branch,
 		pc_ctrl => pc_ctrl,

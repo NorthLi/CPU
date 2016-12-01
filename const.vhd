@@ -42,7 +42,7 @@ package const is
 	
 	type INSARR is array(0 to 10) of std_logic_vector(15 downto 0);
 	constant ins_array : INSARR :=(
-		x"6e16",  -- LI R6 16
+		x"6e4e",  -- LI R6 4e
 		x"f601",  -- MTIH R6
 		x"63fe",  -- ADDSP FE
 		x"6e10",  -- LI R6 10
@@ -50,7 +50,7 @@ package const is
 		x"ee40",  -- MFPC R6
 		x"4eff",  -- ADDIU R6 FF
 		x"d601",  -- SW_SP R6 01
-		x"6e16",  -- LI R6 16
+		x"6e4e",  -- LI R6 4e
 		x"ee00",  -- JR R6
 		x"0800"   -- NOP
 	);

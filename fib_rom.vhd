@@ -16,9 +16,9 @@ begin
 		case input_addr is 
 			when x"0001" => output_ins <= x"68bf";-- LI R0 BF
 			when x"0002" => output_ins <= x"3000";-- SLL R0 R0 0 (BF00)
-			when x"0003" => output_ins <= x"6a02";-- LI R2 2
+			when x"0003" => output_ins <= x"6a03";-- LI R2 3
 			when x"0004" => output_ins <= x"3240";-- SLL R2 R2 0 (0200)
-			when x"0005" => output_ins <= x"4a20";-- ADDIU R2 0X20 -> R2->0220
+			when x"0005" => output_ins <= x"4a00";-- ADDIU R2 0X00 -> R2->0300
 			when x"0006" => output_ins <= x"6b11";-- LI R3 11(SRAM_START_ADDR)
 			when x"0007" => output_ins <= x"d882";-- SW R0 R4 2
 			when x"0008" => output_ins <= x"0800";-- NOP

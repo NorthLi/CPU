@@ -38,6 +38,7 @@ begin
 	);
 	
 	ram2_address(17 downto 16) <= "00";
+	ram2_address(15 downto 0) <= pc_ram when status = wait_ram else addr_ram;
 	ram2_data <= din_ram when status = write_ram else (others => 'Z');
 	dout_ram <= ram2_data;
 	
@@ -53,15 +54,12 @@ begin
 					when wait_ram =>
 						ram2_we <= '1';
 						ram2_oe <= '0';
-						ram2_address(15 downto 0) <=pc_ram;
 					when read_ram =>
 						ram2_we <= '1';
 						ram2_oe <= '0';
-						ram2_address(15 downto 0) <= addr_ram;
 					when write_ram =>
 						ram2_oe <= '1';
 						ram2_we <= '0';
-						ram2_address(15 downto 0) <= addr_ram;
 					when others =>
 						ram2_oe <= '1';
 						ram2_we <= '1';
