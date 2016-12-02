@@ -250,7 +250,7 @@ architecture Behavioral of Thinpad is
 	
 	-- MEM_WB
 	signal dataz_MEM: std_logic_vector(15 downto 0);
-			
+
 	signal rz_WB: std_logic_vector(3 downto 0);
 	signal dataz_WB: std_logic_vector(15 downto 0);
 	
@@ -259,7 +259,6 @@ architecture Behavioral of Thinpad is
 	signal pc_ctrl: std_logic;
 	signal rx_reg, ry_reg: std_logic_vector(3 downto 0);
 	signal datax_reg, datay_reg: std_logic_vector(15 downto 0);
-	signal dout_MEM: std_logic_vector(15 downto 0);
 	signal dataz_ALU: std_logic_vector(15 downto 0);
 	
 	--VGA
@@ -399,7 +398,7 @@ begin
 		we_MEM => we_MEM,
 		addr_MEM => addr_MEM,
 		din_MEM => din_MEM,
-		dout_MEM => dout_MEM,
+		dout_MEM => dataz_MEM,
 		
 		ram1_oe => ram1_oe,
 		ram1_we => ram1_we,
@@ -469,18 +468,24 @@ begin
 	);
 		
 	-- MEM_Choose
-	din_EX <= dataz_EX when (oe_EX or we_EX) = '1'
-     	  else dataz_ALU;
+	process(dataz_EX, dataz_MEM, dataz_ALU, we_EX, oe_MEM, rz_MEM, rz_EX)
+	begin
+		if(we_EX = '1')then
+			if(oe_MEM = '1' and rz_MEM = rz_EX)then
+				din_EX <= dataz_MEM;
+			else
+				din_EX <= dataz_EX;
+			end if;
+		else
+			din_EX <= dataz_ALU;
+		end if;
+	end process;
 		  
 	addr_EX <= dataz_ALU when (oe_EX or we_EX) = '1'
  	      else dataz_EX;
 	
-	-- WB_Choose
-	dataz_MEM <= dout_MEM when (oe_MEM or we_MEM) = '1'
-			  else din_MEM;
-	
 	-- Bubble_Mananger
-	bubble <= '1' when (oe_EX = '1' and (rx_ID = rz_EX or ry_ID = rz_EX or rz_ID = rz_EX))
+	bubble <= '1' when (oe_EX = '1' and (rx_ID = rz_EX or ry_ID = rz_EX))
   	     else '0';
 		  
 	-- Int Manager
